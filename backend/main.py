@@ -16,7 +16,10 @@ app = FastAPI(title="PDI Studio API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=[
+        "http://localhost:5173",           # Para você testar no seu PC
+        "https://pdistudio.netlify.app"    # A nossa casa nova e oficial!
+    ],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
