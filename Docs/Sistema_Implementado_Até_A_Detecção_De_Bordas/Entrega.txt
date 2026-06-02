@@ -1,0 +1,17 @@
+Assunto: Entrega do Projeto Final - PDI Studio (Marco Schenkel Jr.)
+
+Olá, Professora.
+Segue a entrega do meu projeto de Processamento Digital de Imagens.
+
+Diferente de um script local, eu desenvolvi uma Arquitetura Web Completa separando o Frontend (Interface) e o Backend (Motor de Processamento).
+
+Aplicação Online: https://projeto-pdi.vercel.app/
+Código Fonte (GitHub): https://github.com/MarcoSchenkelJr/projeto_pdi
+
+Observação 1:
+Importante para o Teste: > O motor Python está hospedado em um servidor gratuito. Por isso, ao aplicar o primeiro filtro, ele pode levar cerca de 50 segundos para "acordar". Os cliques seguintes serão instantâneos.
+
+Observação 2:
+Após aplicar qualquer filtro, peço que a senhora clique no botão "Salvar Acadêmico" (no menu Arquivo). O sistema irá gerar um .zip não apenas com as imagens, mas com um arquivo algoritmo_utilizado.py contendo a fundamentação teórica baseada em suas aulas e a implementação matemática em Python puro do filtro utilizado.
+
+Fico à disposição para resolver qualquer parte que possa ter faltado ou ficado diferente do que foi solicitado.

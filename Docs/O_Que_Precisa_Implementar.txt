@@ -1,0 +1,117 @@
+Desenvolva um software que permita ao operador:
+(FEITO) Escolher uma imagem.
+(FEITO) Salvar as imagens originais e resultantes utilizadas em uma pasta junto com o código fonte do algoritmo utilizado na edição feita.
+(FEITO) O menu ARQUIVO deve conter pelo menos esses itens: Abrir imagem, Salvar imagem, Sobre, Sair.
+(FEITO) Na parte superior da tela devem constar o nome do autor.
+(FEITO) https://projeto-pdi.vercel.app/
+(FEITO) https://github.com/MarcoSchenkelJr/projeto_pdi
+
+--------------------------------------------------------------------------------------------
+
+Nas propriedades precisa ter uma nova repartição logo abaixo, onde mostra as camadas de efeitos sendo adicionadas e empilhadas na imagem.
+Semelhante a como funcionam as camadas no Photoshop, no qual a pessoa possa adicionar e remover camadas para testar os efeitos.
+Por exemplo: Rotacionar + espandir + escala de cinza.
+E na hora de salvar precisa trazer todos os códigos Python que o projeto já faz atualmente, só que atualmente ainda é individualmente, mas precisará ser com todas as edições somadas.
+A pessoa também precisa ter a opção de remover um filtro se ela não gostar do resultado, com algum símbolo de excluir por exemplo.
+E uma opção de excluir todas as camadas de uma vez se a pessoa quiser reiniciar as edições.
+
+--------------------------------------------------------------------------------------------
+
+Atualmente só é possível Abrir uma imagem pelo menu ARQUIVO.
+Porém é conveniente a pessoa clicar no espaço vazio onde fica a imagem original e já aparecer a opção para Abrir uma imagem nova.
+Entretanto, quando já estiver uma imagem carregada, só seja possível carregar uma nova imagem através do menu Arquivo.
+
+--------------------------------------------------------------------------------------------
+
+Os menus ainda precisam ser agrupados (no projeto atual está tudo em uma lista):
+
+Um menu para TRANSFORMAÇÕES GEOMÉTRICAS, com opções de:
+(FEITO) Translação.
+(FEITO) Rotação.
+(FEITO) Espelhamento na horizontal.
+(FEITO) Espelhamento na vertical.
+(FEITO) Aumento do tamanho da imagem.
+(FEITO) Diminuição do tamanho da imagem.
+
+-------
+Um menu FILTROS, com as opções:
+(FEITO) Grayscale.
+(FEITO) Alterar o Brilho.
+(FEITO) Passa Baixa.
+(FEITO) Passa Alta.
+(FEITO) Threshold.
+(FEITO) Contraste.
+(FEITO) Filtro Média.
+(FEITO) Filtro Mediana.
+(FEITO) Filtro Gauss.
+
+-------
+Um menu de MORFOLOGIA MATEMÁTICA  com as opções:
+(FEITO) Dilatação.
+(FEITO) Erosão.
+(FEITO) Abertura.
+(FEITO) Fechamento.
+Afinamento:
+- Steintford,
+- Zhang-Suen,
+- Holt.
+
+-------
+Um menu com a opção do DESAFIO:
+Criar um menu DESAFIO e dentro dele uma opção para cada exercício resolvido.
+Teremos cinco exercícios como desafio final da disciplina.
+
+EXERCÍCIO 1:
+O desafio consiste em ler uma imagem contendo um relógio analógico.
+O programa deve identificar o horário indicado pelos ponteiros (hora e minuto) e apresentar o resultado em formato digital.
+
+Exemplos:
+Imagem com ponteiro das horas em 10 e minutos em 3
+R: 10:15
+Imagem com ponteiro das horas em 3 e minutos em 12
+R: 03:00
+Imagem com ponteiro das horas em 7 e minutos em 6
+R: 07:30
+
+EXERCÍCIO 2:
+Faça um programa que leia uma imagem contendo objetos coloridos (círculos ou quadrados) e indique a quantidade de objetos por cor.
+
+Exemplos:
+1 objeto amarelo, 4 vermelhos, 2 azuis
+6 verdes, 3 amarelos
+3 objetos vermelhos, 2 azuis, 5 verdes
+
+EXERCÍCIO 3:
+Faça um programa que leia uma imagem contendo letras do alfabeto (A–Z), possivelmente com ruído, e indique quais letras estão presentes na imagem (sem repetição).
+
+Exemplos:
+Imagem com A, B, C
+R: A, B, C
+Imagem com X, Y, Z
+R: X, Y, Z
+Imagem com M, M, M
+R: M
+
+EXERCÍCIO 4:
+Faça um programa que leia uma imagem contendo uma sequência de placas de trânsito e identifique o tipo de cada placa.
+Tipos possíveis:
+-Pare 
+-Velocidade máxima,
+-Proibido estacionar,
+-Sentido obrigatório.
+
+Exemplo:
+Imagem com 3 placas: Pare, Velocidade máxima, Sentido proibido.
+R: Pare, Velocidade máxima, Sentido proibido.
+
+EXERCÍCIO 5:
+Faça um programa que leia uma imagem contendo barras verticais (como um gráfico simples), 
+e informe qual é a barra mais alta e qual é a mais baixa.
+
+Exemplos:
+Alturas: 10, 20, 5, 15
+R: Maior = 20 | Menor = 5
+Alturas: 7, 7, 7
+R: Maior = 7 | Menor = 7
+
+--------------------------------------------------------------------------------------------
