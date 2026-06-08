@@ -44,10 +44,13 @@ export const MainLayout = () => {
     }
   };
 
-  const handleImageUpload = (file: File) => {
-    setImageFile(file);
-    if (originalImageUrl) URL.revokeObjectURL(originalImageUrl);
-    setOriginalImageUrl(URL.createObjectURL(file));
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setOriginalImageUrl(URL.createObjectURL(file));
+      setProcessedImageUrl(null); // Limpa o resultado anterior ao carregar nova foto
+    }
   };
 
   const clearImages = () => {
@@ -150,6 +153,7 @@ export const MainLayout = () => {
           originalImage={originalImageUrl}
           processedImage={processedImageUrl}
           isProcessing={isProcessing}
+          onImageUpload={handleImageUpload} // <-- A mágica da conexão acontece aqui!
         />
 
         <Inspector
