@@ -20,9 +20,29 @@ interface InspectorProps {
   onParamChange: (paramName: keyof ToolParams, value: number) => void;
   isOpen: boolean;
   onToggle: () => void;
+  // --- NOVAS PROPRIEDADES DE CAMADAS ADICIONADAS AQUI ---
+  layers: any[];
+  activeLayerId: string | null;
+  onToggleLayerVisibility: (id: string) => void;
+  onDeleteLayer: (id: string) => void;
+  onSelectLayer: (id: string) => void;
+  onClearLayers: () => void;
 }
 
-export const Inspector = ({ activeTool, params, onParamChange, isOpen, onToggle }: InspectorProps) => {
+export const Inspector = ({
+  activeTool,
+  params,
+  onParamChange,
+  isOpen,
+  onToggle,
+  // --- ADICIONE ELAS AQUI TAMBÉM ---
+  layers,
+  activeLayerId,
+  onToggleLayerVisibility,
+  onDeleteLayer,
+  onSelectLayer,
+  onClearLayers
+}: InspectorProps) => {
   return (
     <>
       {!isOpen && (
@@ -252,7 +272,14 @@ export const Inspector = ({ activeTool, params, onParamChange, isOpen, onToggle 
         </div>
 
         {/* --- A MÁGICA ACONTECE AQUI: A Vitrine de Camadas --- */}
-        <LayersPanel />
+        <LayersPanel
+          layers={layers}
+          activeLayerId={activeLayerId}
+          onToggleVisibility={onToggleLayerVisibility}
+          onDeleteLayer={onDeleteLayer}
+          onSelectLayer={onSelectLayer}
+          onClearAll={onClearLayers}
+        />
 
       </aside>
     </>
