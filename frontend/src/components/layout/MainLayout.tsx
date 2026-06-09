@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { Inspector, ToolParams } from './Inspector';
 import { CanvasArea } from '../workspace/CanvasArea';
-import { processThreshold, processBrightnessContrast, processMeanFilter, processMedianFilter, processGaussianFilter, processTranslation, processRotation, processScale, processMirror, processDilation, processErosion, processOpening, processClosing, processGrayscale, processLowpass, processHighpass } from '../../services/api';
+import { processPipeline } from '../../services/api';
 
 // --- 1. NOVA ESTRUTURA DE DADOS (A anatomia de uma camada) ---
 export interface Layer {
@@ -90,6 +90,26 @@ export const MainLayout = () => {
     if (activeLayerId === id) setActiveLayerId(null);
   };
 
+  const moveLayerUp = (id: string) => {
+    setLayers(prev => {
+      const index = prev.findIndex(l => l.id === id);
+      if (index <= 0) return prev; // Já está no topo
+      const newLayers = [...prev];
+      [newLayers[index - 1], newLayers[index]] = [newLayers[index], newLayers[index - 1]];
+      return newLayers;
+    });
+  };
+
+  const moveLayerDown = (id: string) => {
+    setLayers(prev => {
+      const index = prev.findIndex(l => l.id === id);
+      if (index === -1 || index === prev.length - 1) return prev; // Já está no fundo
+      const newLayers = [...prev];
+      [newLayers[index + 1], newLayers[index]] = [newLayers[index], newLayers[index + 1]];
+      return newLayers;
+    });
+  };
+
   const selectLayer = (id: string) => {
     setActiveLayerId(id);
     setIsInspectorOpen(true);
@@ -119,11 +139,14 @@ export const MainLayout = () => {
     setProcessedImageUrl(null);
   };
 
-  // Motor Principal via DEBOUNCE (Dispara chamadas após 300ms de inatividade)
+
+  // --- MOTOR V2.0: PIPELINE DE CAMADAS (Dispara após 300ms de inatividade) ---
   useEffect(() => {
     if (!imageFile) return;
 
-    if (activeTool !== 'threshold' && activeTool !== 'brightness-contrast' && !['mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass'].includes(activeTool)) {
+    // Se não houver camadas ou todas estiverem com o olhinho fechado, mostra só a original
+    const hasVisibleLayers = layers.some(l => l.visible);
+    if (!hasVisibleLayers || layers.length === 0) {
       setProcessedImageUrl(null);
       return;
     }
@@ -131,49 +154,17 @@ export const MainLayout = () => {
     const triggerApi = async () => {
       setIsProcessing(true);
       try {
-        let newUrl = null;
-        if (activeTool === 'threshold') {
-          newUrl = await processThreshold(imageFile, params.threshold_value);
-        } else if (activeTool === 'brightness-contrast') {
-          newUrl = await processBrightnessContrast(imageFile, params.brightness, params.contrast);
-        } else if (activeTool === 'mean-filter') {
-          newUrl = await processMeanFilter(imageFile, params.kernel_size);
-        } else if (activeTool === 'median-filter') {
-          newUrl = await processMedianFilter(imageFile, params.kernel_size);
-        } else if (activeTool === 'gaussian-filter') {
-          newUrl = await processGaussianFilter(imageFile, params.kernel_size);
-        } else if (activeTool === 'translation') {
-          newUrl = await processTranslation(imageFile, params.x_offset, params.y_offset);
-        } else if (activeTool === 'rotation') {
-          newUrl = await processRotation(imageFile, params.angle);
-        } else if (activeTool === 'scale') {
-          newUrl = await processScale(imageFile, params.scale_factor);
-        } else if (activeTool === 'mirror') {
-          newUrl = await processMirror(imageFile, params.flip_code);
-        } else if (activeTool === 'dilate') {
-          newUrl = await processDilation(imageFile, params.kernel_size, params.iterations);
-        } else if (activeTool === 'erode') {
-          newUrl = await processErosion(imageFile, params.kernel_size, params.iterations);
-        } else if (activeTool === 'opening') {
-          newUrl = await processOpening(imageFile, params.kernel_size);
-        } else if (activeTool === 'closing') {
-          newUrl = await processClosing(imageFile, params.kernel_size);
-        } else if (activeTool === 'grayscale') {
-          newUrl = await processGrayscale(imageFile);
-        } else if (activeTool === 'lowpass') {
-          newUrl = await processLowpass(imageFile, params.kernel_size);
-        } else if (activeTool === 'highpass') {
-          newUrl = await processHighpass(imageFile);
-        }
+        // A MÁGICA ACONTECE AQUI: Mandamos a imagem e a pilha inteira de uma só vez!
+        const newUrl = await processPipeline(imageFile, layers);
 
         if (newUrl) {
           setProcessedImageUrl(prev => {
-            if (prev) URL.revokeObjectURL(prev); // clean memory before replacing state
+            if (prev) URL.revokeObjectURL(prev); // Limpa a memória antes de substituir
             return newUrl;
           });
         }
       } catch (error) {
-        console.error('Erro na API:', error);
+        console.error('Erro no Motor de Pipeline:', error);
       } finally {
         setIsProcessing(false);
       }
@@ -183,12 +174,12 @@ export const MainLayout = () => {
 
     debounceTimerUrl.current = setTimeout(() => {
       triggerApi();
-    }, 200);
+    }, 300);
 
     return () => {
       if (debounceTimerUrl.current) clearTimeout(debounceTimerUrl.current);
     };
-  }, [imageFile, activeTool, params]); // dependências reativas
+  }, [imageFile, layers]); // O Cérebro agora reage a QUALQUER alteração na lista de camadas!
 
   return (
     <div className="flex flex-col w-screen h-screen bg-canvas overflow-hidden font-sans text-textprimary selection:bg-highlight selection:text-white">
@@ -225,6 +216,8 @@ export const MainLayout = () => {
           activeLayerId={activeLayerId}
           onToggleLayerVisibility={toggleLayerVisibility}
           onDeleteLayer={deleteLayer}
+          onMoveLayerUp={moveLayerUp}
+          onMoveLayerDown={moveLayerDown}
           onSelectLayer={selectLayer}
           onClearLayers={clearAllLayers}
         />

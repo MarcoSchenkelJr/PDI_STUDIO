@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -127,3 +128,64 @@ async def process_highpass(file: UploadFile = File(...)):
     processed_bytes = apply_highpass(image_bytes)
     return Response(content=processed_bytes, media_type="image/png")
 
+
+
+# --- MOTOR DE PIPELINE (V2.0) ---
+@app.post("/api/process/pipeline")
+async def process_pipeline(file: UploadFile = File(...), layers: str = Form(...)):
+    # 1. Lê a imagem original
+    current_bytes = await file.read()
+    
+    # 2. Converte o 'bilhete' (String JSON) em uma lista de dicionários Python
+    layers_data = json.loads(layers)
+    
+    # IMPORTANTE: No React, a camada mais nova entra no topo (índice 0).
+    # Para o processamento da imagem, precisamos aplicar da mais velha (base) para a mais nova (topo).
+    # Então, nós invertemos a lista
+    layers_data.reverse()
+    
+    # 3. Loop do Motor: Aplica cada filtro na sequência
+    for layer in layers_data:
+        # Se o "olhinho" da camada estiver fechado no frontend, pula ela
+        if not layer.get("visible", True):
+            continue
+            
+        tool_id = layer.get("toolId")
+        p = layer.get("params", {})
+        
+        # Mapeamento do Cérebro
+        if tool_id == "threshold":
+            current_bytes = apply_threshold(current_bytes, p.get("threshold_value", 128))
+        elif tool_id == "brightness-contrast":
+            current_bytes = apply_brightness_contrast(current_bytes, p.get("brightness", 0), p.get("contrast", 1.0))
+        elif tool_id == "mean-filter":
+            current_bytes = apply_mean_filter(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "median-filter":
+            current_bytes = apply_median_filter(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "gaussian-filter":
+            current_bytes = apply_gaussian_filter(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "translation":
+            current_bytes = apply_translation(current_bytes, p.get("x_offset", 0), p.get("y_offset", 0))
+        elif tool_id == "rotation":
+            current_bytes = apply_rotation(current_bytes, p.get("angle", 0.0))
+        elif tool_id == "scale":
+            current_bytes = apply_scale(current_bytes, p.get("scale_factor", 1.0))
+        elif tool_id == "mirror":
+            current_bytes = apply_mirror(current_bytes, p.get("flip_code", 1))
+        elif tool_id == "dilate":
+            current_bytes = apply_dilation(current_bytes, p.get("kernel_size", 3), p.get("iterations", 1))
+        elif tool_id == "erode":
+            current_bytes = apply_erosion(current_bytes, p.get("kernel_size", 3), p.get("iterations", 1))
+        elif tool_id == "opening":
+            current_bytes = apply_opening(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "closing":
+            current_bytes = apply_closing(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "grayscale":
+            current_bytes = apply_grayscale(current_bytes)
+        elif tool_id == "lowpass":
+            current_bytes = apply_lowpass(current_bytes, p.get("kernel_size", 3))
+        elif tool_id == "highpass":
+            current_bytes = apply_highpass(current_bytes)
+
+    # 4. Devolve a imagem final, com todos os efeitos somados!
+    return Response(content=current_bytes, media_type="image/png")

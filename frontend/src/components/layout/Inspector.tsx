@@ -25,6 +25,8 @@ interface InspectorProps {
   activeLayerId: string | null;
   onToggleLayerVisibility: (id: string) => void;
   onDeleteLayer: (id: string) => void;
+  onMoveLayerUp: (id: string) => void;
+  onMoveLayerDown: (id: string) => void;
   onSelectLayer: (id: string) => void;
   onClearLayers: () => void;
 }
@@ -40,6 +42,8 @@ export const Inspector = ({
   activeLayerId,
   onToggleLayerVisibility,
   onDeleteLayer,
+  onMoveLayerUp,
+  onMoveLayerDown,
   onSelectLayer,
   onClearLayers
 }: InspectorProps) => {
@@ -277,6 +281,8 @@ export const Inspector = ({
           activeLayerId={activeLayerId}
           onToggleVisibility={onToggleLayerVisibility}
           onDeleteLayer={onDeleteLayer}
+          onMoveLayerUp={onMoveLayerUp}
+          onMoveLayerDown={onMoveLayerDown}
           onSelectLayer={onSelectLayer}
           onClearAll={onClearLayers}
         />
