@@ -1,3 +1,4 @@
+import { LayersPanel } from './LayersPanel';
 import { SlidersHorizontal } from 'lucide-react';
 
 export interface ToolParams {
@@ -48,7 +49,8 @@ export const Inspector = ({ activeTool, params, onParamChange, isOpen, onToggle 
           <h2 className="text-sm font-semibold text-textprimary tracking-wide whitespace-nowrap">Propriedades</h2>
         </div>
 
-        <div className="p-5 space-y-8">
+        {/* Adicionado flex-1 e overflow-y-auto para rolagem independente */}
+        <div className="p-5 space-y-8 flex-1 overflow-y-auto scrollbar-hide">
 
           {activeTool === 'threshold' && (
             <div className="space-y-4">
@@ -248,6 +250,10 @@ export const Inspector = ({ activeTool, params, onParamChange, isOpen, onToggle 
           )}
 
         </div>
+
+        {/* --- A MÁGICA ACONTECE AQUI: A Vitrine de Camadas --- */}
+        <LayersPanel />
+
       </aside>
     </>
   );
