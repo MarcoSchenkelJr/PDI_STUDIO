@@ -490,7 +490,53 @@ const ALGORITHM_SOURCES: Record<string, string> = {
     img_dilatada = apply_dilation_pure(image_matrix, kernel_size)
     img_fechada = apply_erosion_pure(img_dilatada, kernel_size)
     
-    return img_fechada`
+    return img_fechada`,
+
+  'thinning': `def apply_thinning_pure(image_matrix: np.ndarray) -> np.ndarray:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA - MORFOLOGIA: ESQUELETIZAÇÃO (LANTUÉJOUL)]
+    O Esqueleto Morfológico $S(X)$ é definido como a união dos centros dos discos
+    maximais inscritos no objeto. A formulação de Lantuéjoul utiliza Erosões e Aberturas:
+        $S_k(X)=(X\ominus kS)-[(X\ominus kS)\circ S]$
+        $S(X)=\bigcup S_k(X)$
+    Essa técnica afina formas complexas para linhas de 1 pixel topológico.
+    """
+    import cv2
+    import numpy as np
+    
+    # Binarização: O relógio tem fundo branco e traços pretos. 
+    # Invertemos para o objeto (ponteiro) virar 255 (branco) e o fundo 0 (preto).
+    _, img_bin = cv2.threshold(image_matrix, 127, 255, cv2.THRESH_BINARY_INV)
+    
+    skeleton = np.zeros(img_bin.shape, np.uint8)
+    eroded = np.zeros(img_bin.shape, np.uint8)
+    temp = np.zeros(img_bin.shape, np.uint8)
+    
+    # Elemento estruturante em cruz (Garante continuidade dos pixels do ponteiro)
+    element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+    
+    while True:
+        # 1. Erosão: $X\ominus S$
+        cv2.erode(img_bin, element, eroded)
+        
+        # 2. Abertura da Erosão: $(X\ominus S)\circ S$ (Feita dilatando a erosão)
+        cv2.dilate(eroded, element, temp)
+        
+        # 3. Subtração: Extrai o esqueleto da iteração atual
+        cv2.subtract(img_bin, temp, temp)
+        
+        # 4. União: Adiciona ao esqueleto total
+        cv2.bitwise_or(skeleton, temp, skeleton)
+        
+        # Atualiza a imagem matriz para a próxima camada interna
+        img_bin = eroded.copy()
+        
+        # Critério de Parada: Quando a erosão consumir toda a imagem
+        if cv2.countNonZero(img_bin) == 0:
+            break
+            
+    # Inverte de volta para manter o padrão (Fundo branco, esqueleto preto)
+    return cv2.bitwise_not(skeleton)`,
 };
 
 interface HeaderProps {
@@ -500,9 +546,10 @@ interface HeaderProps {
   processedImageUrl: string | null;
   onImageUpload: (file: File) => void;
   onClearImages: () => void;
+  layers: any[]; // <-- A NOVA LINHA AQUI
 }
 
-export const Header = ({ authorName, activeTool, originalImageUrl, processedImageUrl, onImageUpload, onClearImages }: HeaderProps) => {
+export const Header = ({ authorName, activeTool, originalImageUrl, processedImageUrl, onImageUpload, onClearImages, layers }: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -524,22 +571,45 @@ export const Header = ({ authorName, activeTool, originalImageUrl, processedImag
     try {
       const zip = new JSZip();
 
-      // Fetch original image
+      // Busca a imagem original
       const origRes = await fetch(originalImageUrl);
       const origBlob = await origRes.blob();
       zip.file('original_image.png', origBlob);
 
-      // Fetch processed image
+      // Busca a imagem processada final
       const procRes = await fetch(processedImageUrl);
       const procBlob = await procRes.blob();
       zip.file('processed_image.png', procBlob);
 
-      // Create algoritmo_utilizado.py
-      const pythonSource = ALGORITHM_SOURCES[activeTool] || '# Código fonte não encontrado para esta ferramenta.';
-      const pythonHeader = "import cv2\nimport numpy as np\n\n# --- Arquivo Exportado pelo PDI Studio ---\n# Ferramenta Utilizada: " + activeTool + "\n\n" + pythonSource + "\n";
-      zip.file('algoritmo_utilizado.py', pythonHeader);
+      // --- V2.0: LÓGICA DE EXPORTAÇÃO EM PIPELINE ACADÊMICO ---
 
-      // Generate Zip and save
+      // 1. Pega apenas as camadas que estão visíveis
+      const visibleLayers = layers.filter(l => l.visible);
+
+      // 2. Invertemos a ordem para o texto (para mostrar da primeira aplicada até a última)
+      const chronologicalLayers = [...visibleLayers].reverse();
+
+      // 3. Monta o histórico EXATO e sequencial de passos para a professora ver
+      const pipelineSteps = chronologicalLayers.map((l, index) => `${index + 1}. ${l.name}`).join('\n# -> ');
+
+      // 4. Extrai os IDs das ferramentas (Set) APENAS PARA NÃO DUPLICAR O CÓDIGO FONTE
+      const uniqueTools = Array.from(new Set(visibleLayers.map(l => l.toolId)));
+
+      // 5. Monta o cabeçalho do arquivo Python com a receita completa
+      let pythonContent = "import cv2\nimport numpy as np\n\n# ==========================================\n# --- Arquivo Exportado pelo PDI Studio ---\n# ==========================================\n";
+      pythonContent += "# ORDEM EXATA DE APLICAÇÃO DOS FILTROS:\n";
+      pythonContent += (pipelineSteps ? `# -> ${pipelineSteps}` : "# -> Nenhuma camada aplicada") + "\n# ==========================================\n\n";
+
+      // 6. Costura o código matemático de cada ferramenta usada
+      uniqueTools.forEach(tool => {
+        const pythonSource = ALGORITHM_SOURCES[tool] || `# Código fonte não encontrado para a ferramenta: ${tool}`;
+        pythonContent += pythonSource + "\n\n";
+      });
+
+      // Salva o mega arquivo gerado
+      zip.file('algoritmo_utilizado.py', pythonContent);
+
+      // Gera o Zip e faz o download
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       saveAs(zipBlob, 'pdi_academico.zip');
     } catch (error) {
@@ -563,18 +633,18 @@ export const Header = ({ authorName, activeTool, originalImageUrl, processedImag
 
           {/* Menus */}
           <div className="relative">
-            <button 
+            <button
               onClick={() => setMenuOpen(!menuOpen)}
               className={`flex items-center space-x-1 text-xs font-semibold px-3 py-1.5 rounded transition-colors ${menuOpen ? 'bg-accent/50 text-white' : 'text-textsecondary hover:text-white hover:bg-accent/30'}`}
             >
               <span>Arquivo</span>
             </button>
-            
+
             {menuOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)}></div>
                 <div className="absolute top-9 left-0 w-48 bg-panel border border-accent rounded-lg shadow-xl z-50 py-1 flex flex-col">
-                  
+
                   <button onClick={() => fileInputRef.current?.click()} className="flex items-center space-x-3 px-4 py-2.5 text-xs text-textsecondary hover:text-white hover:bg-highlight transition-colors w-full text-left">
                     <Upload size={14} />
                     <span>Abrir...</span>
@@ -616,20 +686,20 @@ export const Header = ({ authorName, activeTool, originalImageUrl, processedImag
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setModalOpen(false)}></div>
           <div className="bg-panel border border-accent p-6 rounded-xl shadow-2xl z-10 w-80 flex flex-col items-center space-y-4">
-             <div className="w-12 h-12 bg-accent/30 rounded-full flex items-center justify-center text-highlight mb-2">
-               <Settings size={24} />
-             </div>
-             <h2 className="text-lg font-bold text-textprimary">PDI Studio</h2>
-             <p className="text-xs text-textsecondary text-center leading-relaxed">
-               Projeto desenvolvido para a disciplina de Processamento Digital de Imagens. Permite a aplicação de filtros em tempo real e transformações usando React, TailwindCSS, e OpenCV (FastAPI).
-             </p>
-             <a href="https://github.com/MarcoSchenkelJr/projeto_pdi.git" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 px-4 py-2 bg-highlight/20 text-highlight hover:bg-highlight hover:text-white rounded-lg transition-colors text-xs font-semibold w-full justify-center mt-2">
-               <Globe size={14} />
-               <span>Ver no GitHub</span>
-             </a>
-             <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-accent text-textsecondary hover:text-white hover:bg-accent rounded-lg transition-colors text-xs font-semibold w-full">
-               Fechar
-             </button>
+            <div className="w-12 h-12 bg-accent/30 rounded-full flex items-center justify-center text-highlight mb-2">
+              <Settings size={24} />
+            </div>
+            <h2 className="text-lg font-bold text-textprimary">PDI Studio</h2>
+            <p className="text-xs text-textsecondary text-center leading-relaxed">
+              Projeto desenvolvido para a disciplina de Processamento Digital de Imagens. Permite a aplicação de filtros em tempo real e transformações usando React, TailwindCSS, e OpenCV (FastAPI).
+            </p>
+            <a href="https://github.com/MarcoSchenkelJr/projeto_pdi.git" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 px-4 py-2 bg-highlight/20 text-highlight hover:bg-highlight hover:text-white rounded-lg transition-colors text-xs font-semibold w-full justify-center mt-2">
+              <Globe size={14} />
+              <span>Ver no GitHub</span>
+            </a>
+            <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-accent text-textsecondary hover:text-white hover:bg-accent rounded-lg transition-colors text-xs font-semibold w-full">
+              Fechar
+            </button>
           </div>
         </div>
       )}

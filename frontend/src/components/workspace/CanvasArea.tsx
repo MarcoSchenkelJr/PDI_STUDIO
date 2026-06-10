@@ -63,8 +63,8 @@ export const CanvasArea = ({ originalImage, processedImage, isProcessing, onImag
 
         {/* Processed Image Canvas */}
         <div className="flex flex-col items-center space-y-4">
-          <span className="text-xs text-highlight font-bold uppercase tracking-widest drop-shadow-md">Processada</span>
-          <div className="min-w-[400px] min-h-[400px] max-w-[45vw] bg-panel border-2 border-accent rounded-xl shadow-xl flex items-center justify-center relative overflow-hidden transition-all hover:border-highlight group">
+          <span className="text-xs text-textprimary font-medium uppercase tracking-widest">Processada</span>
+          <div className="min-w-[400px] min-h-[400px] max-w-[45vw] bg-panel border-2 border-accent rounded-xl shadow-xl flex items-center justify-center relative overflow-hidden transition-all group">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
 
             {isProcessing ? (

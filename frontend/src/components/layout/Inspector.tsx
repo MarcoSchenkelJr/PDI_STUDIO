@@ -1,5 +1,5 @@
 import { LayersPanel } from './LayersPanel';
-import { SlidersHorizontal } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 export interface ToolParams {
   threshold_value: number;
@@ -20,7 +20,6 @@ interface InspectorProps {
   onParamChange: (paramName: keyof ToolParams, value: number) => void;
   isOpen: boolean;
   onToggle: () => void;
-  // --- NOVAS PROPRIEDADES DE CAMADAS ADICIONADAS AQUI ---
   layers: any[];
   activeLayerId: string | null;
   onToggleLayerVisibility: (id: string) => void;
@@ -37,7 +36,6 @@ export const Inspector = ({
   onParamChange,
   isOpen,
   onToggle,
-  // --- ADICIONE ELAS AQUI TAMBÉM ---
   layers,
   activeLayerId,
   onToggleLayerVisibility,
@@ -49,44 +47,55 @@ export const Inspector = ({
 }: InspectorProps) => {
   return (
     <>
+      {/* Botão flutuante quando o painel está fechado */}
       {!isOpen && (
         <button
           onClick={onToggle}
           className="absolute right-0 top-0 bg-canvas border-b border-l border-accent p-4 rounded-bl-xl shadow-lg z-30 text-textsecondary hover:text-highlight transition-colors group flex items-center space-x-3"
           title="Abrir Propriedades"
         >
-          <SlidersHorizontal size={18} />
-          <span className="text-sm font-semibold tracking-wide whitespace-nowrap hidden group-hover:block transition-all">Propriedades</span>
+          <Settings size={18} />
+          <span className="text-xs font-bold uppercase tracking-wider whitespace-nowrap hidden group-hover:block transition-all">PROPRIEDADES</span>
         </button>
       )}
 
+      {/* Painel Lateral */}
       <aside
         className={`bg-panel border-l border-accent flex flex-col flex-shrink-0 shadow-2xl z-20 transition-all duration-300 ease-in-out ${isOpen ? 'w-72 translate-x-0' : 'w-0 translate-x-full opacity-0 border-l-0 overflow-hidden'
           }`}
       >
+        {/* Cabeçalho do Painel */}
         <div
           onClick={onToggle}
-          className="p-4 border-b border-accent flex items-center space-x-3 bg-canvas cursor-pointer hover:bg-white/5 transition-colors"
+          className="p-4 border-b border-accent flex items-center justify-center gap-2 bg-canvas cursor-pointer hover:bg-white/5 transition-colors group"
           title="Ocultar Painel"
         >
-          <SlidersHorizontal size={18} className="text-highlight" />
-          <h2 className="text-sm font-semibold text-textprimary tracking-wide whitespace-nowrap">Propriedades</h2>
+          <Settings size={18} className="text-textsecondary group-hover:text-highlight transition-colors" />
+          <h2 className="text-xs font-bold text-textsecondary group-hover:text-highlight uppercase tracking-wider transition-colors">PROPRIEDADES</h2>
         </div>
 
-        {/* Adicionado flex-1 e overflow-y-auto para rolagem independente */}
+        {/* Área de Propriedades (Scrollável) */}
         <div className="p-5 space-y-8 flex-1 overflow-y-auto scrollbar-hide">
+
+          {/* Tela de Boas Vindas */}
+          {!activeTool && (
+            <div className="flex flex-col h-40 items-center justify-center text-center space-y-4 opacity-50 mt-4">
+              <Settings size={32} className="text-textsecondary" />
+              <span className="text-xs text-textsecondary italic leading-relaxed">
+                Selecione uma ferramenta no <br /> menu lateral para começar.
+              </span>
+            </div>
+          )}
 
           {activeTool === 'threshold' && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex justify-between font-medium">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Nível de Threshold (Limiar)</span>
                 <span className="text-highlight font-bold">{params.threshold_value}</span>
               </label>
               <input
                 title="Threshold"
-                type="range"
-                min="0"
-                max="255"
+                type="range" min="0" max="255"
                 value={params.threshold_value}
                 onChange={(e) => onParamChange('threshold_value', Number(e.target.value))}
                 className="w-full h-1.5 bg-accent rounded-lg appearance-none cursor-pointer"
@@ -97,32 +106,26 @@ export const Inspector = ({
           {activeTool === 'brightness-contrast' && (
             <div className="space-y-8">
               <div className="space-y-4">
-                <label className="text-xs text-textsecondary flex justify-between font-medium">
+                <label className="text-sm font-medium text-textsecondary flex justify-between">
                   <span>Brilho</span>
                   <span className="text-highlight font-bold">{params.brightness}</span>
                 </label>
                 <input
                   title="Brilho"
-                  type="range"
-                  min="-100"
-                  max="100"
+                  type="range" min="-100" max="100"
                   value={params.brightness}
                   onChange={(e) => onParamChange('brightness', Number(e.target.value))}
                   className="w-full h-1.5 bg-accent rounded-lg appearance-none cursor-pointer"
                 />
               </div>
-
               <div className="space-y-4">
-                <label className="text-xs text-textsecondary flex justify-between font-medium">
+                <label className="text-sm font-medium text-textsecondary flex justify-between">
                   <span>Contraste</span>
                   <span className="text-highlight font-bold">{params.contrast.toFixed(1)}</span>
                 </label>
                 <input
                   title="Contraste"
-                  type="range"
-                  min="0.1"
-                  max="3.0"
-                  step="0.1"
+                  type="range" min="0.1" max="3.0" step="0.1"
                   value={params.contrast}
                   onChange={(e) => onParamChange('contrast', Number(e.target.value))}
                   className="w-full h-1.5 bg-accent rounded-lg appearance-none cursor-pointer"
@@ -133,16 +136,13 @@ export const Inspector = ({
 
           {['mean-filter', 'median-filter', 'gaussian-filter', 'dilate', 'erode', 'opening', 'closing', 'lowpass'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex justify-between font-medium">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Tamanho do Kernel</span>
                 <span className="text-highlight font-bold">{params.kernel_size}</span>
               </label>
               <input
                 title="Kernel Size"
-                type="range"
-                min="3"
-                max="151"
-                step="2"
+                type="range" min="3" max="151" step="2"
                 value={params.kernel_size}
                 onChange={(e) => onParamChange('kernel_size', Number(e.target.value))}
                 className="w-full h-1.5 bg-accent rounded-lg appearance-none cursor-pointer"
@@ -153,7 +153,7 @@ export const Inspector = ({
           {activeTool === 'translation' && (
             <div className="space-y-8">
               <div className="space-y-4">
-                <label className="text-xs text-textsecondary flex justify-between font-medium">
+                <label className="text-sm font-medium text-textsecondary flex justify-between">
                   <span>Eixo X (Offset)</span>
                   <span className="text-highlight font-bold">{params.x_offset}px</span>
                 </label>
@@ -166,7 +166,7 @@ export const Inspector = ({
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-xs text-textsecondary flex justify-between font-medium">
+                <label className="text-sm font-medium text-textsecondary flex justify-between">
                   <span>Eixo Y (Offset)</span>
                   <span className="text-highlight font-bold">{params.y_offset}px</span>
                 </label>
@@ -183,7 +183,7 @@ export const Inspector = ({
 
           {activeTool === 'rotation' && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex justify-between font-medium">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Ângulo (Rotação)</span>
                 <span className="text-highlight font-bold">{params.angle}º</span>
               </label>
@@ -199,7 +199,7 @@ export const Inspector = ({
 
           {activeTool === 'scale' && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex justify-between font-medium">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Fator de Escala</span>
                 <span className="text-highlight font-bold">{params.scale_factor.toFixed(1)}x</span>
               </label>
@@ -215,7 +215,7 @@ export const Inspector = ({
 
           {activeTool === 'mirror' && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex font-medium">
+              <label className="text-sm font-medium text-textsecondary flex">
                 <span>Direção</span>
               </label>
               <div className="flex space-x-2">
@@ -243,7 +243,7 @@ export const Inspector = ({
 
           {['dilate', 'erode'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-xs text-textsecondary flex justify-between font-medium">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Iterações</span>
                 <span className="text-highlight font-bold">{params.iterations}</span>
               </label>
@@ -257,7 +257,8 @@ export const Inspector = ({
             </div>
           )}
 
-          {['grayscale', 'highpass'].includes(activeTool) && (
+          {/* 1. Lista de filtros sem botões de ajuste (ex1-clock está aqui) */}
+          {['grayscale', 'highpass', 'thinning', 'ex1-clock'].includes(activeTool) && (
             <div className="space-y-4">
               <span className="text-xs text-textsecondary italic leading-relaxed">
                 Este filtro é aplicado diretamente e não possui opções customizáveis nesta versão.
@@ -265,9 +266,10 @@ export const Inspector = ({
             </div>
           )}
 
-          {activeTool !== 'threshold' && activeTool !== 'brightness-contrast' && !['mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass'].includes(activeTool) && (
-            <div className="flex h-32 items-center justify-center text-center">
-              <span className="text-xs text-textsecondary italic leading-relaxed">
+          {/* 2. Lista EXCLUSÃO DE ERROS (ex1-clock OBRIGATORIAMENTE tem que estar aqui no final) */}
+          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'ex1-clock'].includes(activeTool) && (
+            <div className="flex h-32 items-center justify-center text-center mt-4">
+              <span className="text-xs text-red-400/80 italic leading-relaxed">
                 O backend para a ferramenta <br /> <strong className="text-textprimary">'{activeTool}'</strong> <br /> ainda não foi implementado.
               </span>
             </div>
@@ -275,16 +277,16 @@ export const Inspector = ({
 
         </div>
 
-        {/* --- A MÁGICA ACONTECE AQUI: A Vitrine de Camadas --- */}
+        {/* Camadas Renderizadas aqui no fundo */}
         <LayersPanel
           layers={layers}
           activeLayerId={activeLayerId}
-          onToggleVisibility={onToggleLayerVisibility}
+          onToggleVisibility={onToggleLayerVisibility}  /* <-- CORRIGIDO AQUI! */
           onDeleteLayer={onDeleteLayer}
           onMoveLayerUp={onMoveLayerUp}
           onMoveLayerDown={onMoveLayerDown}
           onSelectLayer={onSelectLayer}
-          onClearAll={onClearLayers}
+          onClearAll={onClearLayers}                    /* <-- CORRIGIDO AQUI! */
         />
 
       </aside>

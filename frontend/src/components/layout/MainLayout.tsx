@@ -37,6 +37,7 @@ export const MainLayout = () => {
   const [layers, setLayers] = useState<Layer[]>([]);
   const [activeLayerId, setActiveLayerId] = useState<string | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState<boolean>(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true); // <-- NOVA LINHA
 
   // Variáveis "Fantasmas" (Elas leem a camada ativa para o Inspector não quebrar)
   const activeLayer = layers.find(l => l.id === activeLayerId);
@@ -69,10 +70,11 @@ export const MainLayout = () => {
   // Quando clicar na Sidebar, CRIA uma nova camada no topo da pilha!
   const handleToolSelect = (toolId: string) => {
     const newLayer: Layer = {
-      id: Date.now().toString(), // Cria um ID único baseado na hora exata
+      // CORREÇÃO CRÍTICA: Gera um ID 100% único misturando o tempo com uma string aleatória
+      id: `layer-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       toolId: toolId,
       name: getToolName(toolId),
-      params: { ...defaultParams }, // Injeta os parâmetros zerados
+      params: { ...defaultParams },
       visible: true,
     };
 
@@ -144,9 +146,11 @@ export const MainLayout = () => {
   useEffect(() => {
     if (!imageFile) return;
 
-    // Se não houver camadas ou todas estiverem com o olhinho fechado, mostra só a original
-    const hasVisibleLayers = layers.some(l => l.visible);
-    if (!hasVisibleLayers || layers.length === 0) {
+    // 1. Filtra as camadas que estão com o olhinho aberto (visible === true)
+    const visibleLayers = layers.filter(l => l.visible);
+
+    // 2. Se não sobrar nenhuma camada visível, limpa a tela para mostrar a original
+    if (visibleLayers.length === 0) {
       setProcessedImageUrl(null);
       return;
     }
@@ -154,12 +158,12 @@ export const MainLayout = () => {
     const triggerApi = async () => {
       setIsProcessing(true);
       try {
-        // A MÁGICA ACONTECE AQUI: Mandamos a imagem e a pilha inteira de uma só vez!
-        const newUrl = await processPipeline(imageFile, layers);
+        // 3. A MÁGICA: Passamos 'visibleLayers' ao invés de 'layers'!
+        const newUrl = await processPipeline(imageFile, visibleLayers);
 
         if (newUrl) {
           setProcessedImageUrl(prev => {
-            if (prev) URL.revokeObjectURL(prev); // Limpa a memória antes de substituir
+            if (prev) URL.revokeObjectURL(prev); // Limpa a memória
             return newUrl;
           });
         }
@@ -179,7 +183,7 @@ export const MainLayout = () => {
     return () => {
       if (debounceTimerUrl.current) clearTimeout(debounceTimerUrl.current);
     };
-  }, [imageFile, layers]); // O Cérebro agora reage a QUALQUER alteração na lista de camadas!
+  }, [imageFile, layers]); // O motor reage a qualquer alteração nos olhinhos
 
   return (
     <div className="flex flex-col w-screen h-screen bg-canvas overflow-hidden font-sans text-textprimary selection:bg-highlight selection:text-white">
@@ -190,12 +194,15 @@ export const MainLayout = () => {
         processedImageUrl={processedImageUrl}
         onImageUpload={handleImageUpload}
         onClearImages={clearImages}
+        layers={layers} // <-- SÓ ADICIONAR ESSA LINHA AQUI!
       />
 
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar
           activeTool={activeTool}
           onToolSelect={handleToolSelect}
+          isOpen={isSidebarOpen}
+          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
         <CanvasArea
