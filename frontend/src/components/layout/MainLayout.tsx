@@ -122,9 +122,12 @@ export const MainLayout = () => {
     setActiveLayerId(null);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
+  // Aceita tanto o Evento (vindo do Canvas) quanto o Arquivo direto (vindo do Header)
+  const handleImageUpload = (payload: any) => {
+    // Se for um evento, extrai o arquivo de dentro. Se for o arquivo direto, usa ele mesmo.
+    const file = payload?.target?.files ? payload.target.files[0] : payload;
+
+    if (file && file instanceof File) {
       setImageFile(file);
       setOriginalImageUrl(URL.createObjectURL(file));
       setProcessedImageUrl(null);

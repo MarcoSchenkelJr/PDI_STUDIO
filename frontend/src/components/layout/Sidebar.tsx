@@ -1,8 +1,32 @@
 import React, { useState } from 'react';
 import {
-  Droplet, Aperture, Zap, Contrast, SunMedium, Grid, Wind, Move,
-  RotateCw, Maximize, FlipHorizontal, FlipVertical, PlusCircle, Wrench,
-  MinusCircle, Maximize2, Minimize2, ChevronDown, ChevronRight, Folder
+  Move,
+  RotateCw,
+  FlipHorizontal,
+  FlipVertical,
+  ZoomIn,
+  ZoomOut,
+  Eye,
+  Sun,
+  Aperture,
+  Zap,
+  Contrast,
+  Sliders,
+  Grid,
+  Wind,
+  PlusCircle,
+  MinusCircle,
+  Sparkles,
+  Lock,
+  Scissors,
+  Clock,
+  Box,
+  Type,
+  Tag,
+  BarChart2,
+  Wrench,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -13,10 +37,50 @@ interface SidebarProps {
 }
 
 const menuGroups = [
-  { title: 'Transformações Geométricas', items: [{ id: 'translation', icon: Move, label: 'Translação' }, { id: 'rotation', icon: RotateCw, label: 'Rotação' }, { id: 'mirror-h', icon: FlipHorizontal, label: 'Espelhamento Horiz.' }, { id: 'mirror-v', icon: FlipVertical, label: 'Espelhamento Vert.' }, { id: 'scale-up', icon: Maximize, label: 'Aumentar Tamanho' }, { id: 'scale-down', icon: Minimize2, label: 'Diminuir Tamanho' }] },
-  { title: 'Filtros', items: [{ id: 'grayscale', icon: Droplet, label: 'Tons de Cinza' }, { id: 'brightness-contrast', icon: SunMedium, label: 'Brilho/Contraste' }, { id: 'lowpass', icon: Aperture, label: 'Passa Baixa' }, { id: 'highpass', icon: Zap, label: 'Passa Alta' }, { id: 'threshold', icon: Contrast, label: 'Threshold/Limiar.' }, { id: 'mean-filter', icon: Droplet, label: 'Filtro Média' }, { id: 'median-filter', icon: Grid, label: 'Filtro Mediana' }, { id: 'gaussian-filter', icon: Wind, label: 'Filtro Gauss' }] },
-  { title: 'Morfologia Matemática', items: [{ id: 'dilate', icon: PlusCircle, label: 'Dilatação' }, { id: 'erode', icon: MinusCircle, label: 'Erosão' }, { id: 'opening', icon: Maximize2, label: 'Abertura' }, { id: 'closing', icon: Minimize2, label: 'Fechamento' }, { id: 'thinning', icon: Zap, label: 'Afinamento' }] },
-  { title: 'Desafios (Exercícios)', items: [{ id: 'ex1-clock', icon: Folder, label: 'Ex 1 - Relógio' }, { id: 'ex2-objects', icon: Folder, label: 'Ex 2 - Objetos' }, { id: 'ex3-letters', icon: Folder, label: 'Ex 3 - Letras' }, { id: 'ex4-signs', icon: Folder, label: 'Ex 4 - Placas' }, { id: 'ex5-charts', icon: Folder, label: 'Ex 5 - Gráfico' }] }
+  {
+    title: 'Transformações Geométricas',
+    items: [
+      { id: 'translation', icon: Move, label: 'Translação' },
+      { id: 'rotation', icon: RotateCw, label: 'Rotação' },
+      { id: 'mirror-h', icon: FlipHorizontal, label: 'Espelhamento Horiz.' },
+      { id: 'mirror-v', icon: FlipVertical, label: 'Espelhamento Vert.' },
+      { id: 'scale-up', icon: ZoomIn, label: 'Aumentar Tamanho' },
+      { id: 'scale-down', icon: ZoomOut, label: 'Diminuir Tamanho' }
+    ]
+  },
+  {
+    title: 'Filtros',
+    items: [
+      { id: 'grayscale', icon: Eye, label: 'Tons de Cinza' },
+      { id: 'brightness-contrast', icon: Sun, label: 'Brilho/Contraste' },
+      { id: 'lowpass', icon: Aperture, label: 'Passa Baixa' },
+      { id: 'highpass', icon: Zap, label: 'Passa Alta' },
+      { id: 'threshold', icon: Contrast, label: 'Threshold/Limiar.' },
+      { id: 'mean-filter', icon: Sliders, label: 'Filtro Média' },
+      { id: 'median-filter', icon: Grid, label: 'Filtro Mediana' },
+      { id: 'gaussian-filter', icon: Wind, label: 'Filtro Gauss' }
+    ]
+  },
+  {
+    title: 'Morfologia Matemática',
+    items: [
+      { id: 'dilate', icon: PlusCircle, label: 'Dilatação' },
+      { id: 'erode', icon: MinusCircle, label: 'Erosão' },
+      { id: 'opening', icon: Sparkles, label: 'Abertura' },
+      { id: 'closing', icon: Lock, label: 'Fechamento' },
+      { id: 'thinning', icon: Scissors, label: 'Afinamento' }
+    ]
+  },
+  {
+    title: 'Desafios (Exercícios)',
+    items: [
+      { id: 'clock', icon: Clock, label: 'Relógio' },
+      { id: 'objects', icon: Box, label: 'Objetos' },
+      { id: 'letters', icon: Type, label: 'Letras' },
+      { id: 'signs', icon: Tag, label: 'Placas' },
+      { id: 'charts', icon: BarChart2, label: 'Gráfico' }
+    ]
+  }
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTool, onToolSelect, isOpen, onToggle }) => {

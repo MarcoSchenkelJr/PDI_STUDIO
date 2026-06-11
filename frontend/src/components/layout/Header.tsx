@@ -4,6 +4,35 @@ import { saveAs } from 'file-saver';
 import { Info, Upload, Download, LogOut, Globe, Settings } from 'lucide-react';
 
 const ALGORITHM_SOURCES: Record<string, string> = {
+
+  'clock': `def solve_clock_academic(image_matrix: np.ndarray) -> str:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA E DIDÁTICA - DESAFIO DO RELÓGIO ANALÓGICO]
+    Este algoritmo combina processamento morfológico espacial e geometria analítica 
+    para extrair a informação temporal contida em uma matriz de imagem discreta.
+    
+    PASSO A PASSO DO PIPELINE EXECUTADO:
+    1. CONVERSÃO E BINARIZAÇÃO: A imagem é convertida para Grayscale e binarizada de forma 
+       invertida (THRESH_BINARY_INV), isolando os traços do relógio em branco (255) sob fundo preto (0).
+       
+    2. MÁSCARA CIRCULAR MATEMÁTICA: Projeta-se uma circunferência baseada na equação afim 
+       (x - xc)² + (y - yc)² <= r² centrada no plano cartesiano da imagem. Uma operação lógica 
+       AND (intersecção de conjuntos) preserva os ponteiros e elimina os numerais externos.
+       
+    3. AFINAMENTO DE LANTUÉJOUL: Aplica-se o esfoliamento morfológico sequencial até obter 
+       as linhas de esqueleto topológico com espessura exata de 1 pixel.
+       
+    4. VARREDURA MATRICIAL (Laços FOR): O algoritmo caminha por cada coordenada pixel por pixel. 
+       Ao mapear os pontos brancos, calcula-se a distância euclidiana máxima em relação ao centro 
+       para isolar as pontas terminais de ambos os vetores (Ponteiro de Horas e Minutos).
+       
+    5. TRIGONOMETRIA PROJETIVA (atan2): O arco-tangente de duas variáveis computa o ângulo teta 
+       em radianos. Corrigindo o deslocamento de fase óptico (+90° para alinhar com o numeral 12), 
+       mapeamos os graus resultantes em partições de 30° (Horas) e 6° (Minutos) gerando o tempo digital.
+    """
+    # ... Pipeline executado com sucesso no PDI Studio!
+    return "Resultado impresso diretamente na tela do Frame Ativo."`,
+
   'threshold': `def apply_threshold_pure(image_matrix: np.ndarray, threshold_value: int) -> np.ndarray:
     """
     [FUNDAMENTAÇÃO TEÓRICA - LIMIARIZAÇÃO (THRESHOLD)]

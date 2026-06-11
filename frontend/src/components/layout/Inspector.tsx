@@ -257,8 +257,8 @@ export const Inspector = ({
             </div>
           )}
 
-          {/* 1. Lista de filtros sem botões de ajuste (ex1-clock está aqui) */}
-          {['grayscale', 'highpass', 'thinning', 'ex1-clock'].includes(activeTool) && (
+          {/* 1. Lista de filtros sem botões de ajuste (clock está aqui) */}
+          {['grayscale', 'highpass', 'thinning', 'clock'].includes(activeTool) && (
             <div className="space-y-4">
               <span className="text-xs text-textsecondary italic leading-relaxed">
                 Este filtro é aplicado diretamente e não possui opções customizáveis nesta versão.
@@ -267,7 +267,7 @@ export const Inspector = ({
           )}
 
           {/* 2. Lista EXCLUSÃO DE ERROS (ex1-clock OBRIGATORIAMENTE tem que estar aqui no final) */}
-          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'ex1-clock'].includes(activeTool) && (
+          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock'].includes(activeTool) && (
             <div className="flex h-32 items-center justify-center text-center mt-4">
               <span className="text-xs text-red-400/80 italic leading-relaxed">
                 O backend para a ferramenta <br /> <strong className="text-textprimary">'{activeTool}'</strong> <br /> ainda não foi implementado.

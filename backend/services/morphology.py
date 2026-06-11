@@ -47,8 +47,6 @@ def apply_closing(image_bytes: bytes, kernel_size: int) -> bytes:
     return encoded_img.tobytes()
 
 def apply_thinning(image_bytes: bytes) -> bytes:
-    import cv2
-    import numpy as np
 
     nparr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)

@@ -68,7 +68,7 @@ async def process_pipeline_route(file: UploadFile = File(...), layers: str = For
                 current_bytes = apply_grayscale(current_bytes)
             elif tool_id == "thinning":
                 current_bytes = apply_thinning(current_bytes)
-            elif tool_id == "ex1-clock":
+            elif tool_id == "clock":
                 current_bytes = solve_clock(current_bytes)
             else:
                 print(f"⚠️ Aviso: Filtro '{tool_id}' ignorado (Não mapeado).")
