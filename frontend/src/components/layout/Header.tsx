@@ -422,6 +422,48 @@ const ALGORITHM_SOURCES: Record<string, string> = {
             
     return out_matrix`,
 
+  'mirror-h': `def apply_mirror_h_pure(image_matrix: np.ndarray) -> np.ndarray:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA - ESPELHAMENTO HORIZONTAL]
+    Inverte a imagem no eixo X. O pixel da coluna 0 vai para a última coluna.
+    Equivalente a apply_mirror_pure com flip_code = 1.
+    """
+    rows, cols = image_matrix.shape[:2]
+    out_matrix = np.zeros_like(image_matrix)
+    for y in range(rows):
+        for x in range(cols):
+            out_matrix[y, (cols - 1) - x] = image_matrix[y, x]
+    return out_matrix`,
+
+  'mirror-v': `def apply_mirror_v_pure(image_matrix: np.ndarray) -> np.ndarray:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA - ESPELHAMENTO VERTICAL]
+    Inverte a imagem no eixo Y. O pixel da linha 0 vai para a última linha.
+    Equivalente a apply_mirror_pure com flip_code = 0.
+    """
+    rows, cols = image_matrix.shape[:2]
+    out_matrix = np.zeros_like(image_matrix)
+    for y in range(rows):
+        for x in range(cols):
+            out_matrix[(rows - 1) - y, x] = image_matrix[y, x]
+    return out_matrix`,
+
+  'scale-up': `def apply_scale_up_pure(image_matrix: np.ndarray, scale_factor: float = 1.5) -> np.ndarray:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA - ESCALA (ZOOM IN)]
+    Aumenta o tamanho da imagem pelo fator de escala usando interpolação vizinho-mais-próximo.
+    Equivalente a apply_scale_pure com scale_factor > 1.
+    """
+    return apply_scale_pure(image_matrix, scale_factor)`,
+
+  'scale-down': `def apply_scale_down_pure(image_matrix: np.ndarray, scale_factor: float = 0.5) -> np.ndarray:
+    """
+    [FUNDAMENTAÇÃO TEÓRICA - ESCALA (ZOOM OUT)]
+    Diminui o tamanho da imagem pelo fator de escala usando interpolação vizinho-mais-próximo.
+    Equivalente a apply_scale_pure com scale_factor < 1.
+    """
+    return apply_scale_pure(image_matrix, scale_factor)`,
+
   'dilate': `def apply_dilation_pure(image_matrix: np.ndarray, kernel_size: int) -> np.ndarray:
     """
     [FUNDAMENTAÇÃO TEÓRICA - MORFOLOGIA MATEMÁTICA: DILATAÇÃO]

@@ -197,7 +197,7 @@ export const Inspector = ({
             </div>
           )}
 
-          {activeTool === 'scale' && (
+          {['scale', 'scale-up', 'scale-down'].includes(activeTool) && (
             <div className="space-y-4">
               <label className="text-sm font-medium text-textsecondary flex justify-between">
                 <span>Fator de Escala</span>
@@ -213,7 +213,7 @@ export const Inspector = ({
             </div>
           )}
 
-          {activeTool === 'mirror' && (
+          {['mirror', 'mirror-h', 'mirror-v'].includes(activeTool) && (
             <div className="space-y-4">
               <label className="text-sm font-medium text-textsecondary flex">
                 <span>Direção</span>
@@ -267,7 +267,7 @@ export const Inspector = ({
           )}
 
           {/* 2. Lista EXCLUSÃO DE ERROS (ex1-clock OBRIGATORIAMENTE tem que estar aqui no final) */}
-          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'mirror', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock'].includes(activeTool) && (
+          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'scale-up', 'scale-down', 'mirror', 'mirror-h', 'mirror-v', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock', 'objects'].includes(activeTool) && (
             <div className="flex h-32 items-center justify-center text-center mt-4">
               <span className="text-xs text-red-400/80 italic leading-relaxed">
                 O backend para a ferramenta <br /> <strong className="text-textprimary">'{activeTool}'</strong> <br /> ainda não foi implementado.

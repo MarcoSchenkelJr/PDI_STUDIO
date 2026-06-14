@@ -27,7 +27,10 @@ const getToolName = (toolId: string) => {
     'rotation': 'Rotação', 'scale': 'Escala', 'mirror': 'Espelhamento', 'grayscale': 'Tons de Cinza',
     'mean-filter': 'Filtro Média', 'median-filter': 'Filtro Mediana', 'gaussian-filter': 'Filtro Gauss',
     'dilate': 'Dilatação', 'erode': 'Erosão', 'opening': 'Abertura', 'closing': 'Fechamento',
-    'lowpass': 'Passa Baixa', 'highpass': 'Passa Alta'
+    'lowpass': 'Passa Baixa', 'highpass': 'Passa Alta',
+    'mirror-h': 'Espelhamento Horiz.', 'mirror-v': 'Espelhamento Vert.',
+    'scale-up': 'Aumentar Tamanho', 'scale-down': 'Diminuir Tamanho',
+    'objects': 'Objetos'
   };
   return names[toolId] || toolId;
 };
@@ -69,12 +72,16 @@ export const MainLayout = () => {
 
   // Quando clicar na Sidebar, CRIA uma nova camada no topo da pilha!
   const handleToolSelect = (toolId: string) => {
+    const initialParams = { ...defaultParams };
+    if (toolId === 'scale-up') initialParams.scale_factor = 1.5;
+    if (toolId === 'scale-down') initialParams.scale_factor = 0.5;
+
     const newLayer: Layer = {
       // CORREÇÃO CRÍTICA: Gera um ID 100% único misturando o tempo com uma string aleatória
       id: `layer-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       toolId: toolId,
       name: getToolName(toolId),
-      params: { ...defaultParams },
+      params: initialParams,
       visible: true,
     };
 
@@ -162,13 +169,18 @@ export const MainLayout = () => {
       setIsProcessing(true);
       try {
         // 3. A MÁGICA: Passamos 'visibleLayers' ao invés de 'layers'!
-        const newUrl = await processPipeline(imageFile, visibleLayers);
+        const result = await processPipeline(imageFile, visibleLayers);
 
-        if (newUrl) {
+        if (result.url) {
           setProcessedImageUrl(prev => {
             if (prev) URL.revokeObjectURL(prev); // Limpa a memória
-            return newUrl;
+            return result.url;
           });
+        }
+
+        if (result.errors.length > 0) {
+          console.warn('Avisos do pipeline:', result.errors);
+          alert('Aviso:\n' + result.errors.join('\n'));
         }
       } catch (error) {
         console.error('Erro no Motor de Pipeline:', error);
@@ -187,6 +199,14 @@ export const MainLayout = () => {
       if (debounceTimerUrl.current) clearTimeout(debounceTimerUrl.current);
     };
   }, [imageFile, layers]); // O motor reage a qualquer alteração nos olhinhos
+
+  // Cleanup de Object URLs na desmontagem do componente
+  useEffect(() => {
+    return () => {
+      if (originalImageUrl) URL.revokeObjectURL(originalImageUrl);
+      if (processedImageUrl) URL.revokeObjectURL(processedImageUrl);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col w-screen h-screen bg-canvas overflow-hidden font-sans text-textprimary selection:bg-highlight selection:text-white">
