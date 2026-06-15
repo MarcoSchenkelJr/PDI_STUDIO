@@ -10,6 +10,7 @@ from services.geometric import apply_translation, apply_rotation, apply_scale, a
 from services.morphology import apply_dilation, apply_erosion, apply_opening, apply_closing, apply_thinning
 from services.challenges.clock import solve_clock
 from services.challenges.objects import solve_objects
+from services.challenges.letters import solve_letters
 
 app = FastAPI(title="PDI Studio API")
 
@@ -75,6 +76,8 @@ async def process_pipeline_route(file: UploadFile = File(...), layers: str = For
                 current_bytes = solve_clock(current_bytes)
             elif tool_id == "objects":
                 current_bytes = solve_objects(current_bytes)
+            elif tool_id == "letters":
+                current_bytes = solve_letters(current_bytes)
             elif tool_id == "lowpass":
                 current_bytes = apply_lowpass(current_bytes, p.get("kernel_size", 3))
             elif tool_id == "highpass":

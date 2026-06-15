@@ -30,7 +30,8 @@ const getToolName = (toolId: string) => {
     'lowpass': 'Passa Baixa', 'highpass': 'Passa Alta',
     'mirror-h': 'Espelhamento Horiz.', 'mirror-v': 'Espelhamento Vert.',
     'scale-up': 'Aumentar Tamanho', 'scale-down': 'Diminuir Tamanho',
-    'objects': 'Objetos'
+    'objects': 'Objetos',
+    'letters': 'Letras'
   };
   return names[toolId] || toolId;
 };
