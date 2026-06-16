@@ -1,0 +1,7 @@
+Pessoal
+
+Postem aqui a implementação realizada até a parte de detecção de bordas.
+
+Pode ser um link para a aplicação, github, arquivop completo zipado, etc.
+
+Quero poder ver o código e executar.
