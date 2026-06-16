@@ -55,7 +55,7 @@ export const LayersPanel: React.FC<LayersPanelProps> = ({
                             >
                                 {layer.visible ? <Eye size={16} /> : <EyeOff size={16} />}
                             </button>
-                            <span className={`text-base font-medium flex items-center gap-2 ${layer.visible ? 'text-white' : 'text-textsecondary line-through'}`}>
+                            <span className={`text-base font-medium flex items-center gap-2 whitespace-nowrap ${layer.visible ? 'text-white' : 'text-textsecondary line-through'}`}>
                                 <span className="text-[10px] text-textsecondary bg-accent px-1.5 py-0.5 rounded">
                                     {layers.length - index}
                                 </span>
