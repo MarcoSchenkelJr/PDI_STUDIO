@@ -62,7 +62,7 @@ export const MainLayout = () => {
   // --- 3. NOVA LÓGICA DE INTERAÇÃO ---
 
   // Quando mexer no slider, atualiza APENAS os parâmetros da camada selecionada
-  const handleParamChange = (paramName: keyof ToolParams, value: number) => {
+  const handleParamChange = (paramName: keyof ToolParams, value: number | string) => {
     if (!activeLayerId) return;
 
     setLayers(prevLayers =>
@@ -216,12 +216,11 @@ export const MainLayout = () => {
     <div className="flex flex-col w-screen h-screen bg-canvas overflow-hidden font-sans text-textprimary selection:bg-highlight selection:text-white">
       <Header
         authorName="Marco Schenkel Jr."
-        activeTool={activeTool}
         originalImageUrl={originalImageUrl}
         processedImageUrl={processedImageUrl}
         onImageUpload={handleImageUpload}
         onClearImages={clearImages}
-        layers={layers} // <-- SÓ ADICIONAR ESSA LINHA AQUI!
+        layers={layers}
       />
 
       <div className="flex flex-1 overflow-hidden relative">

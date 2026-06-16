@@ -18,7 +18,7 @@ export interface ToolParams {
 interface InspectorProps {
   activeTool: string;
   params: ToolParams;
-  onParamChange: (paramName: keyof ToolParams, value: number) => void;
+  onParamChange: (paramName: keyof ToolParams, value: number | string) => void;
   isOpen: boolean;
   onToggle: () => void;
   layers: any[];

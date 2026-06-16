@@ -1540,7 +1540,6 @@ if __name__ == '__main__':
 
 interface HeaderProps {
   authorName: string;
-  activeTool: string;
   originalImageUrl: string | null;
   processedImageUrl: string | null;
   onImageUpload: (file: File) => void;
@@ -1548,7 +1547,7 @@ interface HeaderProps {
   layers: any[]; // <-- A NOVA LINHA AQUI
 }
 
-export const Header = ({ authorName, activeTool, originalImageUrl, processedImageUrl, onImageUpload, onClearImages, layers }: HeaderProps) => {
+export const Header = ({ authorName, originalImageUrl, processedImageUrl, onImageUpload, onClearImages, layers }: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
