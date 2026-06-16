@@ -77,14 +77,14 @@ const menuGroups = [
       { id: 'clock', icon: Clock, label: 'Relógio' },
       { id: 'objects', icon: Box, label: 'Objetos' },
       { id: 'letters', icon: Type, label: 'Letras' },
-      { id: 'signs', icon: Tag, label: 'Placas' },
+      { id: 'plates', icon: Tag, label: 'Placas' },
       { id: 'charts', icon: BarChart2, label: 'Gráfico' }
     ]
   }
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeTool, onToolSelect, isOpen, onToggle }) => {
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ 'Filtros': true });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const toggleGroup = (title: string) => setOpenGroups(prev => ({ ...prev, [title]: !prev[title] }));
 
   return (

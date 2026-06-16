@@ -20,7 +20,7 @@ def solve_letters(image_bytes: bytes) -> bytes:
                     binary[y, x] = 255
 
         # ============================================
-        # PASSO 2: ENCONTRAR LETRAS POR FLOOD FILL
+        # PASSO 2: ENCONTRAR LETRAS
         # ============================================
         visited = np.zeros((h, w), dtype=bool)
         letters = []

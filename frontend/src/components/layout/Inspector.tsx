@@ -12,6 +12,7 @@ export interface ToolParams {
   scale_factor: number;
   flip_code: number;
   iterations: number;
+  method: string;
 }
 
 interface InspectorProps {
@@ -257,8 +258,8 @@ export const Inspector = ({
             </div>
           )}
 
-          {/* 1. Lista de filtros sem botões de ajuste (clock está aqui) */}
-          {['grayscale', 'highpass', 'thinning', 'clock'].includes(activeTool) && (
+           {/* 1. Lista de filtros sem botões de ajuste (clock está aqui) */}
+           {['grayscale', 'highpass', 'clock'].includes(activeTool) && (
             <div className="space-y-4">
               <span className="text-xs text-textsecondary italic leading-relaxed">
                 Este filtro é aplicado diretamente e não possui opções customizáveis nesta versão.
@@ -266,8 +267,30 @@ export const Inspector = ({
             </div>
           )}
 
+          {/* Afinamento com seleção de método */}
+          {activeTool === 'thinning' && (
+            <div className="space-y-4">
+              <label className="text-sm font-medium text-textsecondary flex justify-between">
+                <span>Método de Afinamento</span>
+              </label>
+              <select
+                title="Método"
+                value={params.method || 'steinfeld'}
+                onChange={(e) => onParamChange('method', e.target.value)}
+                className="w-full h-10 bg-accent rounded-lg px-3 text-textprimary border border-accent cursor-pointer"
+              >
+                <option value="steinfeld">Steinfeld</option>
+                <option value="zhang_suen">Zhang-Suen</option>
+                <option value="holt">Holt</option>
+              </select>
+              <span className="text-xs text-textsecondary italic leading-relaxed">
+                Selecione o algoritmo de afinamento desejado.
+              </span>
+            </div>
+          )}
+
           {/* 2. Lista EXCLUSÃO DE ERROS (ex1-clock OBRIGATORIAMENTE tem que estar aqui no final) */}
-          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'scale-up', 'scale-down', 'mirror', 'mirror-h', 'mirror-v', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock', 'objects', 'letters'].includes(activeTool) && (
+          {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'scale-up', 'scale-down', 'mirror', 'mirror-h', 'mirror-v', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock', 'objects', 'letters', 'plates', 'charts'].includes(activeTool) && (
             <div className="flex h-32 items-center justify-center text-center mt-4">
               <span className="text-xs text-red-400/80 italic leading-relaxed">
                 O backend para a ferramenta <br /> <strong className="text-textprimary">'{activeTool}'</strong> <br /> ainda não foi implementado.

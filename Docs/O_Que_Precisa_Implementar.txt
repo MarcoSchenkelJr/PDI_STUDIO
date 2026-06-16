@@ -51,13 +51,13 @@ Um menu de MORFOLOGIA MATEMÁTICA  com as opções:
 (FEITO) Erosão.
 (FEITO) Abertura.
 (FEITO) Fechamento.
-Afinamento:
+(FEITO) Afinamento:
 - Steintford,
 - Zhang-Suen,
 - Holt.
 
 -------------------------------------------
-Um menu com a opção do DESAFIO:
+(FEITO) Um menu com a opção do DESAFIO:
 Criar um menu DESAFIO e dentro dele uma opção para cada exercício resolvido.
 Teremos cinco exercícios como desafio final da disciplina.
 
@@ -84,7 +84,7 @@ Exemplos:
 3 objetos vermelhos, 2 azuis, 5 verdes
 
 ---------------------
-EXERCÍCIO 3:
+(FEITO) EXERCÍCIO 3:
 Faça um programa que leia uma imagem contendo letras do alfabeto (A–Z), possivelmente com ruído, e indique quais letras estão presentes na imagem (sem repetição).
 
 Exemplos:
@@ -96,7 +96,7 @@ Imagem com M, M, M
 R: M
 
 ---------------------
-EXERCÍCIO 4:
+(FEITO) EXERCÍCIO 4:
 Faça um programa que leia uma imagem contendo uma sequência de placas de trânsito e identifique o tipo de cada placa.
 Tipos possíveis:
 -Pare 
@@ -109,7 +109,7 @@ Imagem com 3 placas: Pare, Velocidade máxima, Sentido proibido.
 R: Pare, Velocidade máxima, Sentido proibido.
 
 ---------------------
-EXERCÍCIO 5:
+(FEITO) EXERCÍCIO 5:
 Faça um programa que leia uma imagem contendo barras verticais (como um gráfico simples), 
 e informe qual é a barra mais alta e qual é a mais baixa.
 

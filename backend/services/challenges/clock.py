@@ -14,7 +14,7 @@ def solve_clock(image_bytes: bytes) -> bytes:
 
         h, w = thresh.shape
 
-        # MÁGICA DA CENTRALIZAÇÃO: DETECÇÃO DINÂMICA DO RELÓGIO
+        # CENTRALIZAÇÃO: DETECÇÃO DINÂMICA DO RELÓGIO
         contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if contours:
@@ -34,7 +34,7 @@ def solve_clock(image_bytes: bytes) -> bytes:
         # 3. Isolamento dos ponteiros centralizados
         clock_hands = cv2.bitwise_and(thresh, mask)
 
-        # 4. Afinamento Morfológico (Lantuéjoul)
+        # 4. Afinamento Morfológico
         _, temp_buffer = cv2.imencode('.png', cv2.bitwise_not(clock_hands))
         thinned_bytes = apply_thinning(temp_buffer.tobytes())
 
@@ -107,9 +107,7 @@ def solve_clock(image_bytes: bytes) -> bytes:
                 minutes_val = decolar_unidade_tempo(p1, is_hour=False)
 
         # =========================================================================
-        # 🌟 O CAMINHO DA PERFEIÇÃO: QUANTIZAÇÃO MAGNÉTICA DOS MINUTOS (SNAP TO 5)
-        # Na sua apresentação, selecione estas linhas e aperte 'Ctrl + /' para comentar!
-        # Isso demonstra à professora a diferença do cálculo bruto para o filtrado.
+        # QUANTIZAÇÃO MAGNÉTICA DOS MINUTOS (SNAP TO 5)
         # =========================================================================
         resto_minuto = minutes_val % 5
         if resto_minuto == 1:
@@ -118,10 +116,10 @@ def solve_clock(image_bytes: bytes) -> bytes:
             minutes_val = (minutes_val + 1) % 60
         # =========================================================================
 
-                # 7. DESIGN DE ALTO IMPACTO VISUAL (Idêntico ao seu Mockup!)
+                # 7. DESIGN VISUAL
         digital_text = f"HORA LIDA: {hours_val:02d}:{minutes_val:02d}"
 
-        # MÁGICA REFINADA: Calcula a largura exata do texto em pixels
+        # REFINAMENTO: Calcula a largura exata do texto em pixels
         (text_w, text_h), _ = cv2.getTextSize(digital_text, cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
 
         # Define a largura da caixinha com base no texto + margens de respiro (padding)

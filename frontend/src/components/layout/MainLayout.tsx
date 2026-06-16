@@ -18,6 +18,7 @@ export interface Layer {
 const defaultParams: ToolParams = {
   threshold_value: 128, brightness: 0, contrast: 1.0, kernel_size: 3,
   x_offset: 0, y_offset: 0, angle: 0.0, scale_factor: 1.0, flip_code: 1, iterations: 1,
+  method: 'steinfeld',
 };
 
 // Dicionário para dar nomes bonitos às camadas no painel
@@ -31,7 +32,9 @@ const getToolName = (toolId: string) => {
     'mirror-h': 'Espelhamento Horiz.', 'mirror-v': 'Espelhamento Vert.',
     'scale-up': 'Aumentar Tamanho', 'scale-down': 'Diminuir Tamanho',
     'objects': 'Objetos',
-    'letters': 'Letras'
+    'letters': 'Letras',
+    'plates': 'Placas',
+    'charts': 'Grafico'
   };
   return names[toolId] || toolId;
 };

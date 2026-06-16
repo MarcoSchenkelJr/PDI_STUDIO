@@ -11,6 +11,8 @@ from services.morphology import apply_dilation, apply_erosion, apply_opening, ap
 from services.challenges.clock import solve_clock
 from services.challenges.objects import solve_objects
 from services.challenges.letters import solve_letters
+from services.challenges.plates import solve_plates
+from services.challenges.charts import solve_charts
 
 app = FastAPI(title="PDI Studio API")
 
@@ -71,13 +73,17 @@ async def process_pipeline_route(file: UploadFile = File(...), layers: str = For
             elif tool_id == "grayscale":
                 current_bytes = apply_grayscale(current_bytes)
             elif tool_id == "thinning":
-                current_bytes = apply_thinning(current_bytes)
+                current_bytes = apply_thinning(current_bytes, p.get("method", "steinfeld"))
             elif tool_id == "clock":
                 current_bytes = solve_clock(current_bytes)
             elif tool_id == "objects":
                 current_bytes = solve_objects(current_bytes)
             elif tool_id == "letters":
                 current_bytes = solve_letters(current_bytes)
+            elif tool_id == "plates":
+                current_bytes = solve_plates(current_bytes)
+            elif tool_id == "charts":
+                current_bytes = solve_charts(current_bytes)
             elif tool_id == "lowpass":
                 current_bytes = apply_lowpass(current_bytes, p.get("kernel_size", 3))
             elif tool_id == "highpass":
