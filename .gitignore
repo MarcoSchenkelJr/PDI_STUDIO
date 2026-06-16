@@ -58,6 +58,7 @@ lerna-debug.log*
 # --- Diretórios de dados ---
 Brain/
 .mimocode/
+Docs/
 
 # --- Cache ---
 .cache/
