@@ -95,7 +95,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTool, onToolSelect, isOp
           <span className="text-base font-bold uppercase tracking-wider whitespace-nowrap hidden group-hover:block transition-all">FERRAMENTAS</span>
         </button>
       )}
-      <aside className={`bg-panel border-r border-accent flex flex-col h-full flex-shrink-0 shadow-2xl z-20 transition-all duration-300 ease-in-out ${isOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full opacity-0 border-r-0 overflow-hidden'}`}>
+      <aside className={`bg-panel border-r border-accent flex flex-col h-full flex-shrink-0 shadow-2xl z-20 transition-all duration-300 ease-in-out ${isOpen ? 'w-72 translate-x-0' : 'w-0 -translate-x-full opacity-0 border-r-0 overflow-hidden'}`}>
         <div onClick={onToggle} className="p-4 border-b border-accent flex items-center justify-center gap-2 bg-canvas cursor-pointer hover:bg-white/5 transition-colors group" title="Ocultar Painel">
           <h2 className="text-base font-bold text-textsecondary group-hover:text-highlight uppercase tracking-wider transition-colors">FERRAMENTAS</h2>
           <Wrench size={18} className="text-textsecondary group-hover:text-highlight transition-colors" />
