@@ -167,6 +167,10 @@ PDI_STUDIO/
 
 ---
 
-## Autores
+## Autor
 
-Desenvolvido por Marco Schenkel Jr. como projeto da disciplina de Processamento Digital de Imagens — Universidade Feevale.
+**Marco Schenkel Jr.** — Desenvolvimento, design e implementação de todas as funcionalidades.
+
+*Desenvolvido como projeto da disciplina de Processamento Digital de Imagens — Universidade Feevale (Profª Marta Bez).*
+
+*Auxílio de IA (MiMo Code) no desenvolvimento e refatoração de código.*
