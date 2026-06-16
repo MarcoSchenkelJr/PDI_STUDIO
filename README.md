@@ -91,7 +91,7 @@ Cinco exercícios práticos implementados:
 |--------|------------|
 | **Frontend** | React 18, TypeScript, Vite, TailwindCSS, Lucide Icons |
 | **Backend** | Python 3.11, FastAPI, OpenCV, NumPy |
-| **Deploy** | Vercel (Frontend) + Render (Backend) |
+| **Deploy** | Vercel + Netlify (Frontend) + Render (Backend) |
 | **Exportador** | JSZip + File-Saver (geração do ZIP no navegador) |
 
 ---
@@ -144,37 +144,24 @@ PDI_STUDIO/
 │       ├── components/
 │       │   ├── layout/
 │       │   │   ├── Header.tsx           # Menu + Exportador Acadêmico (ALGORITHM_SOURCES)
-│       │   │   └── MainLayout.tsx       # Motor de pipeline + estados
-│       │   ├── Sidebar.tsx              # Painel de ferramentas
-│       │   └── Canvas.tsx               # Exibição da imagem
+│       │   │   ├── MainLayout.tsx       # Motor de pipeline + estados
+│       │   │   ├── Sidebar.tsx          # Painel de ferramentas
+│       │   │   ├── Inspector.tsx        # Painel de propriedades
+│       │   │   └── LayersPanel.tsx      # Painel de camadas
+│       │   └── workspace/
+│       │       └── CanvasArea.tsx       # Exibição da imagem
 │       ├── api.ts                       # Comunicação com o backend
 │       └── App.tsx
-├── Docs/
-│   ├── Explicacao_Algoritmos.md         # Explicação didática de todos os algoritmos
-│   ├── Estudo_Minucioso.txt             # Material de estudo para defesa
-│   ├── O_Que_Precisa_Implementar.txt    # Checklist de requisitos
-│   └── Desafio_De_PDI/Imagens/          # 15 imagens de teste
 └── README.md
 ```
 
 ---
 
-## Material Didático (Docs/)
-
-A pasta `Docs/` contém todo o material de referência utilizado no projeto:
-
-| Arquivo | Conteúdo |
-|---------|----------|
-| `Explicacao_Algoritmos.md` | Explicação didática completa com 16 implementações Python Puro |
-| `Estudo_Minucioso.txt` | Resumo para defesa: fórmulas, matrizes de convolução, conceitos |
-| `O_Que_Precisa_Implementar.txt` | Checklist de todos os requisitos (todos marcados FEITO) |
-
----
-
 ## Acesso ao Projeto (Live)
 
-- **Frontend:** https://projeto-pdi.vercel.app/
-- **Backend:** Hospedado no Render (serviço independente)
+- **Frontend (Vercel):** https://pdistudio.vercel.app/
+- **Frontend (Netlify):** https://pdistudio.netlify.app/
+- **Backend (Render):** Hospedado no Render (serviço independente)
 
 > *Nota: O backend Render pode levar ~50s para "acordar" na primeira requisição (camada gratuita). Requisições subsequentes são instantâneas.*
 
