@@ -1,87 +1,185 @@
 # PDI Studio
 
-Um sistema interativo completo para **Processamento Digital de Imagens (PDI)**, desenvolvido com foco acadêmico e didático. O projeto une a performance matricial do OpenCV no backend com uma interface rica, reativa e moderna construída em React.
+Um sistema interativo completo para **Processamento Digital de Imagens (PDI)**, desenvolvido como projeto acadêmico da disciplina ministrada pela Profª Marta Bez na Universidade Feevale.
 
-## O Projeto
+---
 
-Este software foi desenvolvido como projeto da disciplina de Processamento Digital de Imagens ministrada pela professora Marta Bez na Universidade Feevale (https://www.feevale.br/). O grande diferencial do PDI Studio é o seu **Exportador Acadêmico**: além de processar as imagens em tempo real na tela, o sistema permite baixar um `.zip` contendo a imagem original, a imagem resultante e um arquivo `algoritmo_utilizado.py`, que explica a fundamentação teórica e demonstra a implementação matemática do algoritmo em **Python Puro** (usando o que foi aprendido nas aulas, laços de repetição, fórmulas matemáticas e matrizes).
+## Visão Geral do Projeto
+
+O PDI Studio é um editor de imagens web-based que permite aplicar operações de PDI em tempo real através de um sistema de camadas (layers). O diferencial pedagógico é o **Exportador Acadêmico**: ao clicar em "Salvar Acadêmico", o estudante baixa um `.zip` contendo:
+
+1. A imagem original
+2. A imagem processada
+3. Um arquivo `algoritmo_utilizado.py` com **implementações em Python Puro** de todos os algoritmos utilizados, com comentários explicativos e fundamentação teórica baseada no material das aulas.
+
+---
+
+## Arquitetura Híbrida: Por que OpenCV no Backend e Python Puro no Exportador?
+
+O projeto adota uma arquitetura **híbrida deliberada** que reflete tanto a realidade do desenvolvimento web profissional quanto o objetivo pedagógico da disciplina:
+
+### Backend (Produção) — OpenCV + FastAPI
+O backend utiliza **OpenCV** e **NumPy** para processamento de imagens porque:
+- **Performance**: OpenCV é otimizado em C++ internamente — processa imagens em milissegundos
+- **Prática profissional**: Projetos reais de visão computacional usam bibliotecas otimizadas
+- **Robustez**: OpenCV trata bordas, interpolação e casos extremos que seriam complexos em Python puro
+
+> O backend NÃO é o foco de estudo de PDI. É a camada de infraestrutura que viabiliza a aplicação web.
+
+### Exportador Acadêmico (Estudo) — Python Puro
+O código exportado (`algoritmo_utilizado.py`) é escrito em **Python Puro** porque:
+- **Didática**: O estudante vê cada iteração, cada fórmula matemática, cada loop
+- **Transparência**: Não há "caixas-pretas" — tudo é visível e auditável
+- **Aprendizado**: As implementações seguem exatamente o que foi ensinado nas aulas (laços for, fórmulas de convolução, trigonometria, etc.)
+
+> O ZIP exportado é o **verdadeiro tesouro de estudos** do projeto. É ele que o estudante baixa para entender como cada algoritmo funciona "por baixo dos panos".
+
+### Resumo da Arquitetura
+
+| Camada | Tecnologia | Código | Objetivo |
+|--------|-----------|--------|----------|
+| **Frontend** | React + TypeScript | `frontend/src/` | Interface do usuário |
+| **Backend** | Python + FastAPI + OpenCV | `backend/` | Processamento em produção |
+| **Exportador** | Python Puro (no ZIP) | `Header.tsx` → `ALGORITHM_SOURCES` | Estudo e aprendizado |
+
+---
 
 ## Funcionalidades Implementadas
 
-* **Operações Pontuais:** Conversão para Tons de Cinza (Grayscale), Limiarização (Threshold), Controle de Brilho e Contraste.
-* **Filtros Espaciais:** Suavização por Média (Blur), Filtro de Mediana, Passa-Baixa (Gaussiano) e Passa-Alta (Detecção de Bordas via Máscaras de Sobel).
-* **Transformações Geométricas:** Translação nos eixos X e Y, Rotação (em graus), Escala (Zoom in/out) e Espelhamento (Horizontal e Vertical).
-* **Morfologia Matemática:** Erosão e Dilatação com controle dinâmico do tamanho do Elemento Estruturante (*Kernel Size*) e Iterações.
+### Operações Pontuais (Pixel a Pixel)
+Cada pixel é processado individualmente, sem considerar vizinhos:
+- **Grayscale** — Conversão para tons de cinza com fórmula BT.601: `Y = 0.299R + 0.587G + 0.114B`
+- **Threshold** — Binarização: `g(x,y) = 255 se f(x,y) > T, senão 0`
+- **Brilho e Contraste** — Transformação linear: `D(x,y) = C * f(x,y) + B`
 
-## Arquitetura de Microsserviços
+### Filtros Espaciais (Convolução)
+Um "carimbo" (kernel) desliza sobre a imagem, processando a vizinhança de cada pixel:
+- **Filtro de Média** — Média aritmética dos vizinhos (suavização)
+- **Filtro de Mediana** — Valor central da lista ordenada (remove ruído sal-e-pimenta)
+- **Filtro Gaussiano** — Peso gaussiano: `G(x,y) = (1/2πσ²) * e^(-(x²+y²)/2σ²)`
+- **Passa-Baixa** — Atenua altas frequências (borramento)
+- **Passa-Alta (Sobel)** — Detecta bordas via gradiente: `Magnitude = √(Gx² + Gy²)`
 
-O projeto foi construído separando completamente a camada visual do motor de processamento:
+### Transformações Geométricas
+Remapeamento de coordenadas espaciais:
+- **Translação** — Deslocamento: `x' = x + tx, y' = y + ty`
+- **Rotação** — Matriz de rotação com seno/cosseno ao redor de um pivô
+- **Escala** — Redimensionamento com interpolação vizinho-mais-próximo
+- **Espelhamento** — Inversão de eixos (horizontal/vertical)
 
-* **Frontend (O Rosto):** Construído com React, TypeScript, Vite, TailwindCSS e ícones Lucide. Gerencia o estado da imagem e a interface responsiva.
-* **Backend (O Cérebro):** Construído com Python e FastAPI. Utiliza a biblioteca `opencv-python-headless` para processamento rápido de matrizes no servidor, recebendo e devolvendo arrays de bytes em milissegundos.
+### Morfologia Matemática
+Operações em imagens binárias usando Elemento Estruturante:
+- **Dilatação** — Expande objetos (MÁXIMO local)
+- **Erosão** — Contrai objetos (MÍNIMO local)
+- **Abertura** — Erosão + Dilatação (remove ruído branco)
+- **Fechamento** — Dilatação + Erosão (preenche buracos)
+- **Afinamento** — 3 métodos: Steinfeld, Zhang-Suen, Holt (esqueletização)
 
-## Acesso ao Projeto (Live)
+### Desafios de PDI
+Cinco exercícios práticos implementados:
+1. **Relógio Analógico** — Detecção de ponteiros + trigonometria (atan2)
+2. **Objetos Coloridos** — Segmentação por cor HSV + classificação de formato
+3. **Reconhecimento de Letras** — Análise topológica (buracos + proporções)
+4. **Placas de Trânsito** — Detecção vermelha + análise diagonal + picos
+5. **Análise de Gráfico** — Medição de barras + escalonamento
 
-O PDI Studio está hospedado em uma arquitetura de nuvem (Microsserviços):
-* **Frontend (Aplicação Web):** https://projeto-pdi.vercel.app/
-* **Backend (API Python):** Hospedado no Render (Serviço Web Independente)
+---
 
-*Nota: Como o backend utiliza a camada gratuita do Render, o primeiro processamento de imagem pode levar cerca de 50 segundos para "acordar" o servidor. Os processamentos subsequentes serão instantâneos.*
+## Stack Tecnológica
 
-## Como executar localmente (Para Desenvolvimento)
+| Camada | Tecnologias |
+|--------|------------|
+| **Frontend** | React 18, TypeScript, Vite, TailwindCSS, Lucide Icons |
+| **Backend** | Python 3.11, FastAPI, OpenCV, NumPy |
+| **Deploy** | Vercel (Frontend) + Render (Backend) |
+| **Exportador** | JSZip + File-Saver (geração do ZIP no navegador) |
 
-Caso deseje rodar o projeto em sua própria máquina:
-Certifique-se de ter o Node.js e o Python 3 instalados na sua máquina.
+---
 
-**1. Backend (Terminal 1 - Python/FastAPI):**
+## Como Executar Localmente
+
+**Pré-requisitos:** Node.js 18+ e Python 3.11+
+
+### Backend (Terminal 1)
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # (No Windows: venv\Scripts\activate)
+source venv/bin/activate      # Linux/Mac
+# venv\Scripts\activate       # Windows
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
-**2. Frontend (Terminal 2 - React/Vite):**
+### Frontend (Terminal 2)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-O projeto estará rodando em algum link como `http://localhost:5173`.
+Acesse: `http://localhost:5173`
 
+---
 
-## Arquitetura do Sistema
+## Estrutura do Projeto
 
-O **PDI Studio** foi projetado utilizando uma arquitetura moderna de microsserviços (Decoupled Architecture), separando as responsabilidades de interface (Client-Side) e processamento matricial pesado (Server-Side).
-
-```mermaid
-graph TD
-    User((Usuário))
-    
-    subgraph Client-Side
-        Front[Frontend Vercel<br/>React, Vite, Tailwind]
-    end
-    
-    subgraph Server-Side
-        API[Backend API Render<br/>Python, FastAPI]
-        Core[Motor Core Algorítmico<br/>OpenCV, NumPy]
-    end
-
-    User -->|1. Upload da imagem| Front
-    Front -->|2. POST REST JSON| API
-    API -->|3. Delega Matrizes RAM| Core
-    Core -.->|Retorno da Matriz| API
-    API -->|4. Resposta Http| Front
-    Front -->|5. Rendering e ZIP| User
+```
+PDI_STUDIO/
+├── backend/
+│   ├── main.py                          # API FastAPI (rota única de pipeline)
+│   ├── services/
+│   │   ├── point_operations.py          # Grayscale, Threshold, Brilho/Contraste
+│   │   ├── spatial_filters.py           # Média, Mediana, Gaussiano, Sobel
+│   │   ├── geometric.py                 # Translação, Rotação, Escala, Espelho
+│   │   ├── morphology.py                # Dilatação, Erosão, Abertura, Fechamento, Afinamento
+│   │   └── challenges/
+│   │       ├── clock.py                 # Desafio 1: Relógio Analógico
+│   │       ├── objects.py               # Desafio 2: Objetos Coloridos
+│   │       ├── letters.py               # Desafio 3: Letras
+│   │       ├── plates.py                # Desafio 4: Placas de Trânsito
+│   │       └── charts.py                # Desafio 5: Análise de Gráfico
+│   └── requirements.txt
+├── frontend/
+│   └── src/
+│       ├── components/
+│       │   ├── layout/
+│       │   │   ├── Header.tsx           # Menu + Exportador Acadêmico (ALGORITHM_SOURCES)
+│       │   │   └── MainLayout.tsx       # Motor de pipeline + estados
+│       │   ├── Sidebar.tsx              # Painel de ferramentas
+│       │   └── Canvas.tsx               # Exibição da imagem
+│       ├── api.ts                       # Comunicação com o backend
+│       └── App.tsx
+├── Docs/
+│   ├── Explicacao_Algoritmos.md         # Explicação didática de todos os algoritmos
+│   ├── Estudo_Minucioso.txt             # Material de estudo para defesa
+│   ├── O_Que_Precisa_Implementar.txt    # Checklist de requisitos
+│   └── Desafio_De_PDI/Imagens/          # 15 imagens de teste
+└── README.md
 ```
 
-### Fluxo de Dados (Data Flow)
+---
 
-1. **Input:** O usuário carrega uma imagem na interface em React.
-2. **Transferência:** O Frontend empacota os parâmetros e os dados da matriz, disparando um POST assíncrono para a API hospedada na Render.
-3. **Validação:** A API (FastAPI) escuta a rota, confere os argumentos matemáticos (como *tamanho do Kernel* e *Limiar*) e despacha para o motor de processamento central.
-4. **Processamento (Core):** Os algoritmos de Visão processam a matriz estritamente em memória RAM alavancando alta performance.
-5. **Retorno:** O Backend transcreve a matriz resultante e devolve para o cliente.
-6. **Entrega:** O Frontend re-hidrata a imagem no navegador e gera o ZIP Dinâmico para avaliação, injetando as docstrings com a teoria correspondente na versão de código nativa e crua.
+## Material Didático (Docs/)
+
+A pasta `Docs/` contém todo o material de referência utilizado no projeto:
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `Explicacao_Algoritmos.md` | Explicação didática completa com 16 implementações Python Puro |
+| `Estudo_Minucioso.txt` | Resumo para defesa: fórmulas, matrizes de convolução, conceitos |
+| `O_Que_Precisa_Implementar.txt` | Checklist de todos os requisitos (todos marcados FEITO) |
+
+---
+
+## Acesso ao Projeto (Live)
+
+- **Frontend:** https://projeto-pdi.vercel.app/
+- **Backend:** Hospedado no Render (serviço independente)
+
+> *Nota: O backend Render pode levar ~50s para "acordar" na primeira requisição (camada gratuita). Requisições subsequentes são instantâneas.*
+
+---
+
+## Autores
+
+Desenvolvido por Marco Schenkel Jr. como projeto da disciplina de Processamento Digital de Imagens — Universidade Feevale.

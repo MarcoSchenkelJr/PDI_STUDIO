@@ -25,10 +25,10 @@ export const CanvasArea = ({ originalImage, processedImage, isProcessing, onImag
 
         {/* Original Image Canvas */}
         <div className="flex flex-col items-center space-y-4">
-          <span className="text-xs text-textprimary font-medium uppercase tracking-widest">Original</span>
+          <span className="text-lg text-textprimary font-medium uppercase tracking-widest">Original</span>
           <div className="min-w-[400px] min-h-[400px] max-w-[45vw] bg-panel border-2 border-accent/20 rounded-xl relative overflow-hidden flex items-center justify-center">
 
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" /* mantenha seu style do background aqui */></div>
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
 
             {/* O SEGREDO: Input de arquivo escondido */}
             <input
@@ -63,21 +63,21 @@ export const CanvasArea = ({ originalImage, processedImage, isProcessing, onImag
 
         {/* Processed Image Canvas */}
         <div className="flex flex-col items-center space-y-4">
-          <span className="text-xs text-textprimary font-medium uppercase tracking-widest">Processada</span>
+          <span className="text-lg text-textprimary font-medium uppercase tracking-widest">Processada</span>
           <div className="min-w-[400px] min-h-[400px] max-w-[45vw] bg-panel border-2 border-accent rounded-xl shadow-xl flex items-center justify-center relative overflow-hidden transition-all group">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
 
             {isProcessing ? (
               <div className="text-center text-highlight flex flex-col items-center space-y-3 z-10 transition-transform animate-pulse">
                 <ImageIcon size={48} strokeWidth={1.2} />
-                <span className="text-sm">Processando...</span>
+                <span className="text-base">Processando...</span>
               </div>
             ) : processedImage ? (
               <img src={processedImage} alt="Processed" className="max-w-full max-h-[70vh] object-contain z-10 p-2" />
             ) : (
               <div className="text-center text-textsecondary flex flex-col items-center space-y-3 z-10 transition-transform group-hover:scale-110">
                 <ImageIcon size={48} strokeWidth={1.2} />
-                <span className="text-sm">Aguardando...</span>
+                <span className="text-base">Aguardando...</span>
               </div>
             )}
           </div>

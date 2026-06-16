@@ -95,9 +95,9 @@ def solve_objects(image_bytes: bytes) -> bytes:
                     'Amarelo': (0, 230, 230)
                 }[color_name]
 
-                cv2.circle(result, (cx, cy), max(w, h) // 2 + 10, color_bgr, 2)
-                cv2.putText(result, label, (cx - 8, cy + 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.circle(result, (cx, cy), max(w, h) // 2 + 10, color_bgr, 4)
+                cv2.putText(result, label, (cx - 12, cy + 9),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 4, cv2.LINE_AA)
 
             if circles > 0 or squares > 0:
                 parts = []
@@ -129,29 +129,29 @@ def solve_objects(image_bytes: bytes) -> bytes:
 
         # Calcular altura do painel
         panel_lines = len(summary_lines) + 1
-        panel_height = 40 + panel_lines * 25
+        panel_height = 90 + panel_lines * 55
         if overlap_warning:
-            panel_height += 50  # 2 linhas de aviso
+            panel_height += 110  # 2 linhas de aviso
 
         # Desenha o resumo na imagem com transparência
         overlay = result.copy()
-        cv2.rectangle(overlay, (10, 10), (380, panel_height), (0, 0, 0), -1)
+        cv2.rectangle(overlay, (10, 10), (600, panel_height), (0, 0, 0), -1)
         alpha = 0.7  # 70% opaco (30% transparente)
         cv2.addWeighted(overlay, alpha, result, 1 - alpha, 0, result)
 
-        cv2.putText(result, f"TOTAL: {total_objects} objetos", (20, 35),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
+        cv2.putText(result, f"TOTAL: {total_objects} objetos", (25, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.6, (255, 255, 255), 4, cv2.LINE_AA)
 
         for i, line in enumerate(summary_lines):
-            cv2.putText(result, line, (20, 60 + i * 25),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1, cv2.LINE_AA)
+            cv2.putText(result, line, (25, 115 + i * 55),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (200, 200, 200), 3, cv2.LINE_AA)
 
         if overlap_warning:
-            warning_y = 60 + len(summary_lines) * 25 + 20
-            cv2.putText(result, "AVISO: Formas sobrepostas detectadas!", (20, warning_y),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 180, 255), 1, cv2.LINE_AA)
-            cv2.putText(result, "A precisao da analise pode ser afetada.", (20, warning_y + 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 140, 200), 1, cv2.LINE_AA)
+            warning_y = 115 + len(summary_lines) * 55 + 40
+            cv2.putText(result, "AVISO: Formas sobrepostas detectadas!", (25, warning_y),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 180, 255), 3, cv2.LINE_AA)
+            cv2.putText(result, "A precisao da analise pode ser afetada.", (25, warning_y + 45),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 140, 200), 3, cv2.LINE_AA)
 
         _, final_buffer = cv2.imencode('.png', result)
         return final_buffer.tobytes()

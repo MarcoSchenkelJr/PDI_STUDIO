@@ -29,7 +29,7 @@ export const LayersPanel: React.FC<LayersPanelProps> = ({
             <div className="p-4 border-b border-accent flex items-center justify-between bg-canvas">
                 <div className="flex items-center space-x-3">
                     <LayersIcon size={18} className="text-textsecondary" />
-                    <h3 className="text-xs font-bold text-textsecondary uppercase tracking-wider">CAMADAS</h3>
+                    <h3 className="text-lg font-bold text-textsecondary uppercase tracking-wider">CAMADAS</h3>
                 </div>
                 <button
                     onClick={onClearAll}
@@ -55,7 +55,7 @@ export const LayersPanel: React.FC<LayersPanelProps> = ({
                             >
                                 {layer.visible ? <Eye size={16} /> : <EyeOff size={16} />}
                             </button>
-                            <span className={`text-sm font-medium flex items-center gap-2 ${layer.visible ? 'text-white' : 'text-textsecondary line-through'}`}>
+                            <span className={`text-base font-medium flex items-center gap-2 ${layer.visible ? 'text-white' : 'text-textsecondary line-through'}`}>
                                 <span className="text-[10px] text-textsecondary bg-accent px-1.5 py-0.5 rounded">
                                     {layers.length - index}
                                 </span>
@@ -80,7 +80,7 @@ export const LayersPanel: React.FC<LayersPanelProps> = ({
                 <div className="flex items-center justify-between bg-canvas p-2 rounded-md border border-accent mt-2 opacity-80">
                     <div className="flex items-center gap-3">
                         <Eye size={16} className="text-textsecondary" />
-                        <span className="text-sm font-medium text-textsecondary flex items-center gap-2">
+                        <span className="text-base font-medium text-textsecondary flex items-center gap-2">
                             <span className="text-[10px] text-textsecondary bg-accent px-1.5 py-0.5 rounded">0</span>
                             Imagem Original
                         </span>

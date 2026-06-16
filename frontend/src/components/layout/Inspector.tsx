@@ -56,7 +56,7 @@ export const Inspector = ({
           title="Abrir Propriedades"
         >
           <Settings size={18} />
-          <span className="text-xs font-bold uppercase tracking-wider whitespace-nowrap hidden group-hover:block transition-all">PROPRIEDADES</span>
+          <span className="text-lg font-bold uppercase tracking-wider whitespace-nowrap hidden group-hover:block transition-all">PROPRIEDADES</span>
         </button>
       )}
 
@@ -72,7 +72,7 @@ export const Inspector = ({
           title="Ocultar Painel"
         >
           <Settings size={18} className="text-textsecondary group-hover:text-highlight transition-colors" />
-          <h2 className="text-xs font-bold text-textsecondary group-hover:text-highlight uppercase tracking-wider transition-colors">PROPRIEDADES</h2>
+          <h2 className="text-lg font-bold text-textsecondary group-hover:text-highlight uppercase tracking-wider transition-colors">PROPRIEDADES</h2>
         </div>
 
         {/* Área de Propriedades (Scrollável) */}
@@ -82,7 +82,7 @@ export const Inspector = ({
           {!activeTool && (
             <div className="flex flex-col h-40 items-center justify-center text-center space-y-4 opacity-50 mt-4">
               <Settings size={32} className="text-textsecondary" />
-              <span className="text-xs text-textsecondary italic leading-relaxed">
+              <span className="text-sm text-textsecondary italic leading-relaxed">
                 Selecione uma ferramenta no <br /> menu lateral para começar.
               </span>
             </div>
@@ -90,7 +90,7 @@ export const Inspector = ({
 
           {activeTool === 'threshold' && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Nível de Threshold (Limiar)</span>
                 <span className="text-highlight font-bold">{params.threshold_value}</span>
               </label>
@@ -107,7 +107,7 @@ export const Inspector = ({
           {activeTool === 'brightness-contrast' && (
             <div className="space-y-8">
               <div className="space-y-4">
-                <label className="text-sm font-medium text-textsecondary flex justify-between">
+                <label className="text-base font-medium text-textsecondary flex justify-between">
                   <span>Brilho</span>
                   <span className="text-highlight font-bold">{params.brightness}</span>
                 </label>
@@ -120,7 +120,7 @@ export const Inspector = ({
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-sm font-medium text-textsecondary flex justify-between">
+                <label className="text-base font-medium text-textsecondary flex justify-between">
                   <span>Contraste</span>
                   <span className="text-highlight font-bold">{params.contrast.toFixed(1)}</span>
                 </label>
@@ -137,7 +137,7 @@ export const Inspector = ({
 
           {['mean-filter', 'median-filter', 'gaussian-filter', 'dilate', 'erode', 'opening', 'closing', 'lowpass'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Tamanho do Kernel</span>
                 <span className="text-highlight font-bold">{params.kernel_size}</span>
               </label>
@@ -154,7 +154,7 @@ export const Inspector = ({
           {activeTool === 'translation' && (
             <div className="space-y-8">
               <div className="space-y-4">
-                <label className="text-sm font-medium text-textsecondary flex justify-between">
+                <label className="text-base font-medium text-textsecondary flex justify-between">
                   <span>Eixo X (Offset)</span>
                   <span className="text-highlight font-bold">{params.x_offset}px</span>
                 </label>
@@ -167,7 +167,7 @@ export const Inspector = ({
                 />
               </div>
               <div className="space-y-4">
-                <label className="text-sm font-medium text-textsecondary flex justify-between">
+                <label className="text-base font-medium text-textsecondary flex justify-between">
                   <span>Eixo Y (Offset)</span>
                   <span className="text-highlight font-bold">{params.y_offset}px</span>
                 </label>
@@ -184,7 +184,7 @@ export const Inspector = ({
 
           {activeTool === 'rotation' && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Ângulo (Rotação)</span>
                 <span className="text-highlight font-bold">{params.angle}º</span>
               </label>
@@ -200,7 +200,7 @@ export const Inspector = ({
 
           {['scale', 'scale-up', 'scale-down'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Fator de Escala</span>
                 <span className="text-highlight font-bold">{params.scale_factor.toFixed(1)}x</span>
               </label>
@@ -216,25 +216,25 @@ export const Inspector = ({
 
           {['mirror', 'mirror-h', 'mirror-v'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex">
+              <label className="text-base font-medium text-textsecondary flex">
                 <span>Direção</span>
               </label>
               <div className="flex space-x-2">
                 <button
                   onClick={() => onParamChange('flip_code', 1)}
-                  className={`flex-1 py-2 text-xs rounded-md border border-accent transition-colors ${params.flip_code === 1 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
+                  className={`flex-1 py-2 text-sm rounded-md border border-accent transition-colors ${params.flip_code === 1 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
                 >
                   Horizontal
                 </button>
                 <button
                   onClick={() => onParamChange('flip_code', 0)}
-                  className={`flex-1 py-2 text-xs rounded-md border border-accent transition-colors ${params.flip_code === 0 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
+                  className={`flex-1 py-2 text-sm rounded-md border border-accent transition-colors ${params.flip_code === 0 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
                 >
                   Vertical
                 </button>
                 <button
                   onClick={() => onParamChange('flip_code', -1)}
-                  className={`flex-1 py-2 text-xs rounded-md border border-accent transition-colors ${params.flip_code === -1 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
+                  className={`flex-1 py-2 text-sm rounded-md border border-accent transition-colors ${params.flip_code === -1 ? 'bg-highlight text-white' : 'text-textsecondary hover:bg-accent'}`}
                 >
                   Ambos
                 </button>
@@ -244,7 +244,7 @@ export const Inspector = ({
 
           {['dilate', 'erode'].includes(activeTool) && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Iterações</span>
                 <span className="text-highlight font-bold">{params.iterations}</span>
               </label>
@@ -261,7 +261,7 @@ export const Inspector = ({
            {/* 1. Lista de filtros sem botões de ajuste (clock está aqui) */}
            {['grayscale', 'highpass', 'clock'].includes(activeTool) && (
             <div className="space-y-4">
-              <span className="text-xs text-textsecondary italic leading-relaxed">
+              <span className="text-sm text-textsecondary italic leading-relaxed">
                 Este filtro é aplicado diretamente e não possui opções customizáveis nesta versão.
               </span>
             </div>
@@ -270,7 +270,7 @@ export const Inspector = ({
           {/* Afinamento com seleção de método */}
           {activeTool === 'thinning' && (
             <div className="space-y-4">
-              <label className="text-sm font-medium text-textsecondary flex justify-between">
+              <label className="text-base font-medium text-textsecondary flex justify-between">
                 <span>Método de Afinamento</span>
               </label>
               <select
@@ -283,7 +283,7 @@ export const Inspector = ({
                 <option value="zhang_suen">Zhang-Suen</option>
                 <option value="holt">Holt</option>
               </select>
-              <span className="text-xs text-textsecondary italic leading-relaxed">
+              <span className="text-sm text-textsecondary italic leading-relaxed">
                 Selecione o algoritmo de afinamento desejado.
               </span>
             </div>
@@ -292,7 +292,7 @@ export const Inspector = ({
           {/* 2. Lista EXCLUSÃO DE ERROS (ex1-clock OBRIGATORIAMENTE tem que estar aqui no final) */}
           {activeTool && !['threshold', 'brightness-contrast', 'mean-filter', 'median-filter', 'gaussian-filter', 'translation', 'rotation', 'scale', 'scale-up', 'scale-down', 'mirror', 'mirror-h', 'mirror-v', 'dilate', 'erode', 'opening', 'closing', 'grayscale', 'lowpass', 'highpass', 'thinning', 'clock', 'objects', 'letters', 'plates', 'charts'].includes(activeTool) && (
             <div className="flex h-32 items-center justify-center text-center mt-4">
-              <span className="text-xs text-red-400/80 italic leading-relaxed">
+              <span className="text-xl text-red-400/80 italic leading-relaxed">
                 O backend para a ferramenta <br /> <strong className="text-textprimary">'{activeTool}'</strong> <br /> ainda não foi implementado.
               </span>
             </div>

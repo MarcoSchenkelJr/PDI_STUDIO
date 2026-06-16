@@ -14,18 +14,18 @@ O PDI Studio contém 5 desafios de Processamento Digital de Imagens. Cada desafi
 
 ### Estratégia Utilizada:
 
-1. **Threshold Manual** — Conversão da imagem para escala de cinza e binarização
+1. **Threshold** — Conversão da imagem para escala de cinza e binarização
 2. **Detecção de Contornos** — Encontrar o contorno externo do relógio
 3. **Máscara Circular** — Criar máscara para isolar os ponteiros dentro do relógio
-4. **Afinamento Morfológico (Lantuéjoul)** — Reduzir os ponteiros para linhas de 1 pixel
+4. **Afinamento Morfológico** — Reduzir os ponteiros para linhas de 1 pixel
 5. **Análise de Pontos Terminais** — Encontrar as pontas dos ponteiros
-6. **Trigonometria (atan2)** — Calcular ângulos dos ponteiros
+6. **Trigonometria (ângulos)** — Calcular ângulos dos ponteiros
 7. **Conversão Ângulo → Hora/Minuto** — Mapear graus para tempo digital
 
 ### Fluxo:
 ```
 Imagem → Threshold → Máscara Circular → Afinamento → 
-Pontos Terminais → atan2 → Ângulos → Hora:Minuto
+Pontos Terminais → Trigonometria ângulos → Ângulos → Hora:Minuto
 ```
 
 ---
@@ -38,8 +38,8 @@ Pontos Terminais → atan2 → Ângulos → Hora:Minuto
 
 ### Estratégia Utilizada:
 
-1. **Conversão para HSV** — Espaço de cor mais adequado para segmentação
-2. **Threshold HSV** — Isolar cada faixa de cor (vermelho, verde, azul, amarelo)
+1. **Matiz, Saturação e Brilho** — Espaço de cor mais adequado para segmentação
+2. **Threshold** — Deixar apenas o objeto de interesse e o fundo preto
 3. **Morfologia (OPEN/CLOSE)** — Limpar ruído nas máscaras de cor
 4. **Detecção de Contornos** — Encontrar cada objeto
 5. **Aproximação Poligonal** — Analisar cantos para distinguir círculos de quadrados
@@ -47,8 +47,8 @@ Pontos Terminais → atan2 → Ângulos → Hora:Minuto
 
 ### Fluxo:
 ```
-Imagem → HSV → Threshold por cor → Morfologia → 
-Contornos → Aproximação Poligonal → Classificação
+Imagem → Matiz, Saturação e Brilho → Threshold → Morfologia → 
+Detecção de Contornos → Aproximação Poligonal → Classificação
 ```
 
 ---
@@ -61,20 +61,20 @@ Contornos → Aproximação Poligonal → Classificação
 
 ### Estratégia Utilizada:
 
-1. **Threshold Manual** — Binarização da imagem
-2. **Flood Fill** — Isolar cada letra individualmente
-3. **Contagem de Buracos** — Identificar letras com buracos fechados (A, B, O, etc.)
+1. **Threshold** — Binarização da imagem
+2. **Preenchimento de regiões** — Isolar cada letra individualmente
+3. **Detecção de Buracos** — Identificar letras com buracos fechados (A, B, O, etc.)
 4. **Análise de Proporções** — Aspect ratio e proporção de preenchimento
 5. **Distribuição de Pixels** — Analisar terços (esquerda/centro/direita)
 6. **Classificação por Regras** — Árvore de decisão baseada em features
 
 ### Lógica de Classificação:
 
-| Buracos | Letras | Critério |
-|---------|--------|----------|
-| 0 | C, X, Y, Z, etc. | Proporções e simetria |
-| 1 | A, D, O, P, Q, R | Aspecto do buraco |
-| 2 | B | Dois buracos |
+| Buracos | Letras              | Critério               |
+|---------|---------------------|------------------------|
+| 0       | C, X, Y, Z, etc.    | Proporções e simetria  |
+| 1       | A, D, O, P, Q, R    | Aspecto do buraco      |
+| 2       | B                   | Dois buracos           |
 
 ---
 
@@ -86,7 +86,7 @@ Contornos → Aproximação Poligonal → Classificação
 
 ### Estratégia Utilizada:
 
-1. **Threshold HSV** — Detecção da cor vermelha (todas as placas)
+1. **Threshold** — Detecção da cor vermelha (todas as placas)
 2. **Morfologia** — Limpeza da máscara
 3. **Detecção de Contornos** — Encontrar as placas
 4. **Análise de Proporção Vermelha** — Pare é preenchido (68%), círculos são ocos (19-23%)
@@ -95,12 +95,12 @@ Contornos → Aproximação Poligonal → Classificação
 
 ### Lógica de Classificação:
 
-| Placa | Critério |
-|-------|----------|
-| Pare | Proporção vermelha > 50% (octógono preenchido) |
-| Velocidade | Proporção vermelha < 50% + sem diagonal |
-| Sentido obrigatório | Proporção < 50% + diagonal + seta (top > bot) |
-| Proibido estacionar | Proporção < 50% + diagonal + letra E |
+| Placa                  | Critério                                         |
+|------------------------|--------------------------------------------------|
+| Pare                   | Proporção vermelha > 50% (octógono preenchido)   |
+| Velocidade             | Proporção vermelha < 50% + sem diagonal          |
+| Sentido obrigatório    | Proporção < 50% + diagonal + seta (top > bot)    |
+| Proibido estacionar    | Proporção < 50% + diagonal + letra E             |
 
 ---
 
@@ -112,8 +112,8 @@ Contornos → Aproximação Poligonal → Classificação
 
 ### Estratégia Utilizada:
 
-1. **Threshold HSV** — Detecção da cor das barras (salmão/rosa)
-2. **Morfologia** — Limpeza da máscara
+1. **Matiz, Saturação e Brilho** — Detecção da cor das barras (salmão/rosa)
+2. **Threshold** — Limpeza da máscara
 3. **Detecção de Contornos** — Encontrar cada barra
 4. **Cálculo de Altura** — Medir pixels de cada barra
 5. **Cálculo de Escala** — Converter pixels para valores reais
@@ -121,10 +121,10 @@ Contornos → Aproximação Poligonal → Classificação
 
 ### Lógica de Escala:
 
-| Situação | Método |
-|----------|--------|
-| Barras diferentes | Escala = 20 / altura_maior |
-| Barras iguais | Escala padrão (7 para gráficos altos, 20 para pequenos) |
+| Situação           | Método                      |
+|--------------------|-----------------------------|
+| Barras diferentes  | Escala = 20 / altura_maior  |
+| Barras iguais      | Escala padrão               |
 
 ---
 
