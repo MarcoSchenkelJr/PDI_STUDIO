@@ -173,4 +173,4 @@ PDI_STUDIO/
 
 *Desenvolvido como projeto da disciplina de Processamento Digital de Imagens — Universidade Feevale (Profª Marta Bez).*
 
-*Auxílio de IA (MiMo Code) no desenvolvimento e refatoração de código.*
+*IAs adicionadas para performance do projeto: MiMo Code e Gemini Pro.*
