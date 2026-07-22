@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api/process';
+const API_BASE_URL = 'https://pdi-studio-api.onrender.com/api/process';
 
 // --- MOTOR DE PIPELINE (V2.0) ---
 export const processPipeline = async (file: File, layers: any[]): Promise<{ url: string; errors: string[] }> => {
